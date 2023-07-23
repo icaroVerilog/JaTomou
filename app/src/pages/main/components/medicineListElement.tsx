@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-import medicine1 from "../../assets/icons/med6.png"
+// import medicine1 from "../../assets/icons/med6.png"
 
 interface medicineData {
     name:                 String,
@@ -22,7 +22,7 @@ export default function MedicineListElement(props: medicineData) {
         <Pressable style={styles.elementMain} onPress={() => Alert.alert('Simple Button pressed')}>
             <View style={styles.imageContainer}>
                 <View style={styles.imageWrapper}>
-                    <Image style={styles.image} source={medicine1}/>
+                    {/* <Image style={styles.image} source={medicine1}/> */}
                 </View>
             </View>
             <View style={styles.contentWrapper}>

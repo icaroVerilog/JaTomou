@@ -1,5 +1,5 @@
-import { StatusBar    } from 'expo-status-bar';
-import { ChevronRight } from 'react-native-feather';
+import { getStatusBarHeight } from 'react-native-status-bar-height'
+import { ChevronRight } from 'react-native-feather'
 import { 
     StyleSheet, 
     Text, 
@@ -10,11 +10,11 @@ import {
     Pressable,
     TouchableOpacity,
     FlatList,
-    ScrollView
+    ScrollView,
 } from 'react-native';
 
-import MedicineListElement from '../../components/medicineListElement'
-
+import MedicineListElement from './components/medicineListElement'
+import MedicineDetail from './components/medicineDetail';
 
 
 const DATA = [
@@ -46,7 +46,11 @@ const DATA = [
         id: '586220f-3da1-471f-bd96-145571e29d72',
         title: 'Third Item',
     },
-  ];
+    // {
+    //     id: '586227f-3da1-471f-bd96-145571e29d72',
+    //     title: 'Third Item',
+    // },
+];
 
 export default function Main() {
     return (
@@ -54,52 +58,50 @@ export default function Main() {
             <View style={styles.profile}>
 
             </View>
-            <View style={styles.newMedicine}>
+            <MedicineDetail>
 
-            </View>
-            <View style={styles.medicineList}>
+            </MedicineDetail>
+            {/* <View style={styles.medicines}>
+                <View style={styles.newMedicine}>
+
+                </View>
                 <FlatList
                     style={styles.medicineListScroll}
                     data={DATA}
                     renderItem={({item}) => <MedicineListElement name={item.title} status={"Nao Tomado"} nextUse={"00:00"}/>}
                     keyExtractor={item => item.id}
                 />
-            </View>
+            </View> */}
         </View>
     )
 }
-
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 35,
+        marginTop: getStatusBarHeight(),
         backgroundColor: "#FFFFFF"
     },
     profile: {
         width: "100%",
-        height: "20%",
+        height: "22%",
         backgroundColor: "#77FFFF"
     },
     newMedicine: {
         width: "100%",
-        height: "10%",
+        height: "14%",
         backgroundColor: '#fffa00'
-    },
-    medicineList: {
-        display: "flex",
-        width: "100%",
-        height: "70%",
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#FFFFFF"
     },
     medicineListScroll: {
         width: "100%",
-        height: "100%",
-        
-        backgroundColor: "#FAAFFF"
+        height: "67%",
+        backgroundColor: "#AAFF00"
+    },
+    medicines: {
+        width: "100%",
+        height: "78%",
+        backgroundColor: "red"
     }
-  }); 
+}); 

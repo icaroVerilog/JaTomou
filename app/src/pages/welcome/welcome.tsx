@@ -1,5 +1,4 @@
-import { StatusBar    } from 'expo-status-bar';
-import { ChevronRight } from 'react-native-feather';
+import { getStatusBarHeight } from 'react-native-status-bar-height'
 import { 
     StyleSheet, 
     Text, 
@@ -11,14 +10,14 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import welcomeImg from "../../../assets/imgs/welcomeImg.png"
+// import welcomeImg from "../../../assets/imgs/welcomeImg.png"
 
 export default function Welcome() {
     return (
         <View style={styles.container}>
             <View style={styles.infoContainer}>
                 <View style={styles.infoImageContainer}>
-                    <Image style={styles.infoimage} source={welcomeImg}/>
+                    {/* <Image style={styles.infoimage} source={welcomeImg}/> */}
                 </View>
                 <View style={styles.infoTextContainer}>
                     <Text style={styles.infoText}>
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fffaaa',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 35
+        marginTop: getStatusBarHeight()
     },
     infoContainer: {
         width: "100%",
