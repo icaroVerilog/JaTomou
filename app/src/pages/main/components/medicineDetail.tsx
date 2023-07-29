@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 import { 
     StyleSheet, 
@@ -8,21 +9,51 @@ import {
     Alert,
     Pressable,
     TouchableOpacity,
-} from 'react-native';
+    Platform,
+    NativeModules
+} from 'react-native'
 
+import { Medicine } from '../../../types'
 import med1 from "../../../../assets/icons/med6.png"
 
-export default function MedicineDetail() {
+function status(statusCode: number) {
+    if (statusCode == 0){
+        return "Não Tomado"
+    }
+    if (statusCode == 1){
+        return "Tomado"
+    }
+    if (statusCode == 2){
+        return "Atrasado"
+    }
+}
+
+export default function MedicineDetail(props: { data:Medicine }) {
+
+    // const [data, setData] = useState<Medicine>({
+    //     id           : 0,
+    //     name         : "medicine",
+    //     usageDays    : 0,
+    //     usageCount   : 0,
+    //     dose         : 0,
+    //     doseCategory : "N/A",
+    //     useInterval  : 0,
+    //     lastUsageTime: "N/A",
+    //     nextUsageTime: "N/A",
+    //     status       : 0
+    // })
+
     return (
         <View style={styles.medicineDetail}>
             <View style={styles.medicineDetailContent}>
                 <View style={styles.mainInfo}>
+                    <View style={styles.mainInfoAdvert}/>
                     <View style={styles.mainInfoImageWrapper}>
                         <Image style={styles.mainInfoImage} source={med1}/>
                     </View>
                     <View style={styles.mainInfoTextWrapper}>
                         <Text style={styles.mainInfoText}>
-                            Dipirona
+                            {props.data.name}
                         </Text>
                     </View>
                 </View>
@@ -30,59 +61,55 @@ export default function MedicineDetail() {
                     <View style={styles.secondaryInfoSub1}>
                         <InfoText 
                             title="Dias de uso" 
-                            content="20"
+                            content={`${props.data.usageDays}`}
                             aditional="dias"
                         />
                         <InfoText 
                             title="Dosagem" 
-                            content="20"
-                            aditional="mg"
+                            content={`${props.data.dose}`}
+                            aditional={`${props.data.doseCategory}`}
                         />
                         <InfoText 
                             title="Horario uso anterior" 
-                            content="15:58"
+                            content={`${props.data.lastUsageTime}`}
                             aditional=""
                         />
                     </View>
                     <View style={styles.secondaryInfoSub2}>
                         <InfoText 
                             title="Quantidade de uso" 
-                            content="300"
+                            content={`${props.data.usageCount}`}
                             aditional="vezes"
                         />
                         <InfoText 
                             title="Intervalo de uso" 
-                            content="24"
+                            content={`${props.data.useInterval}`}
                             aditional="horas"
                         />
                         <InfoText 
                             title="Horario próximo uso" 
-                            content="15:58"
+                            content={`${props.data.nextUsageTime}`}
                             aditional=""
                         />
                     </View>
                     
                 </View>
                 <View style={styles.takenInformation}>
-                    {/* <View style={styles.takenInformationInfo}>
-
-                    </View> */}
+                    <Text style={styles.takenInformationText}>
+                        {status(props.data.status)}
+                    </Text>
                 </View>
                 <View style={styles.confirmTakenButton}>
-
+                    <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => Alert.alert('Simple Button pressed')}>
+                        <Text style={styles.buttonText}>Tomei</Text>
+                    </TouchableOpacity>  
                 </View>
             </View>
         </View>
     )
 }
 
-type InfoTextProps = {
-    title: string,
-    content: string,
-    aditional: string
-}
-
-function InfoText(props: InfoTextProps) {
+function InfoText(props: { title:string, content:string, aditional:string }) {
     return (
         <View style={infoTextStyle.textContainer}>
             <View style={infoTextStyle.textTitleContainer}>
@@ -109,6 +136,7 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
+
         backgroundColor: '#fffa00'
     },
     medicineDetailContent: {
@@ -117,6 +145,9 @@ const styles = StyleSheet.create({
         height: "74%",
         width: "94%",
         marginTop: "4%",
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+
         backgroundColor: "orange"
     },
     mainInfo: {
@@ -125,8 +156,17 @@ const styles = StyleSheet.create({
         height: "26%",
         width: "100%",
         alignItems: "center",
-        backgroundColor: "blue",
-        elevation: 2
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        
+        // backgroundColor: "blue",
+    },
+    mainInfoAdvert: {
+        display: "flex",
+        width: "100%",
+        height: "5%",
+        borderRadius: 5,
+        backgroundColor: "green"
     },
     mainInfoImageWrapper: {
         display: "flex",
@@ -134,7 +174,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "30%",
         height: "60%",
-        backgroundColor: "green"
+
+        // backgroundColor: "green"
     },
     mainInfoImage: {
         width: "80%",
@@ -147,17 +188,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         height: "40%",
-        backgroundColor: "grey"
+
+        // backgroundColor: "grey"
     },
     mainInfoText: {
-        fontSize: 28
+        fontSize: 35
     },
     secondaryInfo: {
         display: "flex",
         flexDirection: "row",
         width: "100%",
         height: "40%",
-        backgroundColor: "pink"
+
+        // backgroundColor: "pink"
     },
     secondaryInfoSub1: {
         display: "flex",
@@ -166,7 +209,8 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "red"
+
+        // backgroundColor: "red"
     },
     secondaryInfoSub2: {
         display: "flex",
@@ -175,22 +219,41 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "brown"
+
+        // backgroundColor: "brown"
     },
     takenInformation: {
         display: "flex",
-        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "center",
         width: "100%",
-        height: "20%",
+        height: "18%",
 
-        backgroundColor: "gray"
+        // backgroundColor: "gray"
     },
-
-
+    takenInformationText: {
+        fontSize: 34,
+        fontWeight: "bold"
+    },
     confirmTakenButton: {
         width: "100%",
-        height: "14%",
-        backgroundColor: "blue"
+        height: "16%",
+        justifyContent: "center",
+        alignItems: "center",
+        // backgroundColor: "blue"
+    },
+    button: {
+        width: "55%",
+        height: "60%",
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#55a630",
+        elevation: 3,
+    },
+    buttonText: {
+        color: "#FFFFFF",
+        fontSize: 24
     }
 }); 
 
@@ -202,25 +265,28 @@ const infoTextStyle = StyleSheet.create({
         height: "25%",
         justifyContent: "center",
         alignItems: "flex-start",
-        marginTop: "4%",
+        marginTop: "7%",
         backgroundColor: "white",
     },
     textTitleContainer: {
         width: "100%",
         height: "40%",
         justifyContent: "flex-end",
-        backgroundColor: "yellow"
+
+        // backgroundColor: "yellow"
     },
     textTitle: {
-        fontSize: 15
+        fontSize: 15,
+        color: "#adb5bd"
     },
     textContentContainer: {
         display: "flex",
         flexDirection: "row",
         width: "100%",
         height: "60%",
-        alignItems: "flex-end",
-        backgroundColor: "green"
+        alignItems: "center",
+
+        // backgroundColor: "green"
     },
     textContentData: {
         fontSize: 25,

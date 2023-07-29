@@ -14,43 +14,94 @@ import {
 } from 'react-native';
 
 import MedicineListElement from './components/medicineListElement'
-import MedicineDetail from './components/medicineDetail';
+import MedicineDetail      from './components/medicineDetail'
 
-
-const DATA = [
+const data = [
     {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
+        id: 0,
+        name: "Dipirona",
+        usageDays: 2,
+        usageCount: 10,
+        dose: 10,
+        doseCategory: "mg",
+        useInterval: 24,
+        lastUsageTime: "N/A",
+        nextUsageTime: "14:00",
+        status: 0
     },
     {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
+        id: 1,
+        name: "Dipirona",
+        usageDays: 2,
+        usageCount: 10,
+        dose: 10,
+        doseCategory: "mg",
+        useInterval: 24,
+        lastUsageTime: "N/A",
+        nextUsageTime: "14:00",
+        status: 0
     },
     {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
+        id: 2,
+        name: "Dipirona",
+        usageDays: 2,
+        usageCount: 10,
+        dose: 10,
+        doseCategory: "mg",
+        useInterval: 24,
+        lastUsageTime: "N/A",
+        nextUsageTime: "14:00",
+        status: 0
     },
     {
-        id: '58692a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
+        id: 3,
+        name: "Dipirona",
+        usageDays: 2,
+        usageCount: 10,
+        dose: 10,
+        doseCategory: "mg",
+        useInterval: 24,
+        lastUsageTime: "N/A",
+        nextUsageTime: "14:00",
+        status: 0
     },
     {
-        id: '58622a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
+        id: 4,
+        name: "Dipirona",
+        usageDays: 2,
+        usageCount: 10,
+        dose: 10,
+        doseCategory: "mg",
+        useInterval: 24,
+        lastUsageTime: "N/A",
+        nextUsageTime: "14:00",
+        status: 0
     },
     {
-        id: '58622a0f-3da1-471f-cd96-145571e29d72',
-        title: 'Third Item',
+        id: 5,
+        name: "Dipirona",
+        usageDays: 2,
+        usageCount: 10,
+        dose: 10,
+        doseCategory: "mg",
+        useInterval: 24,
+        lastUsageTime: "N/A",
+        nextUsageTime: "14:00",
+        status: 0
     },
     {
-        id: '586220f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-    // {
-    //     id: '586227f-3da1-471f-bd96-145571e29d72',
-    //     title: 'Third Item',
-    // },
-];
+        id: 6,
+        name: "Dipirona",
+        usageDays: 2,
+        usageCount: 10,
+        dose: 10,
+        doseCategory: "mg",
+        useInterval: 24,
+        lastUsageTime: "N/A",
+        nextUsageTime: "14:00",
+        status: 0
+    }
+]
 
 export default function Main() {
     return (
@@ -58,18 +109,16 @@ export default function Main() {
             <View style={styles.profile}>
 
             </View>
-            <MedicineDetail>
-
-            </MedicineDetail>
+            <MedicineDetail data={data[0]}/>
             {/* <View style={styles.medicines}>
                 <View style={styles.newMedicine}>
 
                 </View>
                 <FlatList
                     style={styles.medicineListScroll}
-                    data={DATA}
-                    renderItem={({item}) => <MedicineListElement name={item.title} status={"Nao Tomado"} nextUse={"00:00"}/>}
-                    keyExtractor={item => item.id}
+                    data={data}
+                    renderItem={({item}) => <MedicineListElement name={item.name} status={"Nao Tomado"} nextUse={"00:00"}/>}
+                    // keyExtractor={item => item.id}
                 />
             </View> */}
         </View>
@@ -87,7 +136,7 @@ const styles = StyleSheet.create({
     profile: {
         width: "100%",
         height: "22%",
-        backgroundColor: "#77FFFF"
+        backgroundColor: "#77FF00"
     },
     newMedicine: {
         width: "100%",

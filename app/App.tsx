@@ -2,19 +2,21 @@ import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View } from 'react-native'
 import Welcome from './src/pages/welcome/welcome'
 import Main     from './src/pages/main/main'
+import NewMedicine from './src/pages/newMedicine/newMedicine'
 
 
 export default function App() {
-  return (
-    <Main></Main>
-  );
+    return (
+		<NewMedicine/>
+		// <Main/>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
