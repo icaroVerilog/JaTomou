@@ -1,5 +1,4 @@
-import { getStatusBarHeight } from 'react-native-status-bar-height'
-import { ChevronRight } from 'react-native-feather'
+import { getStatusBarHeight } from "react-native-status-bar-height"
 import { 
     StyleSheet, 
     Text, 
@@ -11,10 +10,11 @@ import {
     TouchableOpacity,
     FlatList,
     ScrollView,
-} from 'react-native';
+    StatusBar
+} from "react-native";
 
-import MedicineListElement from './components/medicineListElement'
-import MedicineDetail      from './components/medicineDetail'
+import MedicineListElement from "./components/medicineListElement"
+import MedicineDetail      from "./components/medicineDetailElement"
 
 const data = [
     {
@@ -103,16 +103,26 @@ const data = [
     }
 ]
 
-export default function Main() {
+export default function Main({navigation}: any){
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="light-content" backgroundColor="#FFFFFF" />
             <View style={styles.profile}>
 
             </View>
-            <MedicineDetail data={data[0]}/>
-            {/* <View style={styles.medicines}>
+            {/* <MedicineDetail data={data[0]}/> */}
+            <View style={styles.medicines}>
                 <View style={styles.newMedicine}>
+                    <TouchableOpacity style={styles.newMedicineButton} onPress={() => navigation.navigate('NewMedicine')}>
+                        {/* <View style={newMedicineButtonStyle.icon}>
 
+                        </View> */}
+                        <View style={styles.newMedicineButtonTextContainer}>
+                            <Text style={styles.newMedicineButtonText}>
+                                Adicionar
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     style={styles.medicineListScroll}
@@ -120,7 +130,7 @@ export default function Main() {
                     renderItem={({item}) => <MedicineListElement name={item.name} status={"Nao Tomado"} nextUse={"00:00"}/>}
                     // keyExtractor={item => item.id}
                 />
-            </View> */}
+            </View>
         </View>
     )
 }
@@ -128,9 +138,9 @@ export default function Main() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        marginTop: getStatusBarHeight(),
+        alignItems: "center",
+        justifyContent: "flex-start",
+        // marginTop: getStatusBarHeight(),
         backgroundColor: "#FFFFFF"
     },
     profile: {
@@ -141,7 +151,28 @@ const styles = StyleSheet.create({
     newMedicine: {
         width: "100%",
         height: "14%",
-        backgroundColor: '#fffa00'
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#fffa00"
+    },
+    newMedicineButton: {
+        display: "flex",
+        flexDirection: "row",
+        width: "60%",
+        height: "60%",
+        borderRadius: 1000,
+        elevation: 3,
+        backgroundColor: "#FFFFFF"
+    },
+    newMedicineButtonTextContainer: {
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 100
+    },
+    newMedicineButtonText: {
+        fontSize: 25
     },
     medicineListScroll: {
         width: "100%",
@@ -153,4 +184,4 @@ const styles = StyleSheet.create({
         height: "78%",
         backgroundColor: "red"
     }
-}); 
+})

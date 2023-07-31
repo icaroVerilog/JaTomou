@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import { getStatusBarHeight } from 'react-native-status-bar-height'
+import React, {useState, useEffect} from "react"
+import { getStatusBarHeight } from "react-native-status-bar-height"
 import { 
     StyleSheet, 
     Text, 
@@ -10,11 +10,14 @@ import {
     Pressable,
     TouchableOpacity,
     Platform,
-    NativeModules
-} from 'react-native'
+    NativeModules,
+    StatusBar
+} from "react-native"
 
-import { Medicine } from '../../../types'
-import med1 from "../../../../assets/icons/med6.png"
+import leftArrow from "../../../assets/icons/general/back.png"
+import trash    from "../../../assets/icons/general/trash2.png"
+
+import med1 from "../../../assets/icons/med6.png"
 
 function status(statusCode: number) {
     if (statusCode == 0){
@@ -28,7 +31,7 @@ function status(statusCode: number) {
     }
 }
 
-export default function MedicineDetail(props: { data:Medicine }) {
+export default function MedicineDetail({navigation}: any) {
 
     // const [data, setData] = useState<Medicine>({
     //     id           : 0,
@@ -45,62 +48,80 @@ export default function MedicineDetail(props: { data:Medicine }) {
 
     return (
         <View style={styles.medicineDetail}>
+            <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
             <View style={styles.medicineDetailContent}>
-                <View style={styles.mainInfo}>
-                    <View style={styles.mainInfoAdvert}/>
+                <View style={styles.returnButtonContainer}>
+                    <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                        <Image style={styles.returnButtonImage} source={trash}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                        <Image style={styles.returnButtonImage} source={leftArrow}/>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.mainInfoContainer}>
                     <View style={styles.mainInfoImageWrapper}>
                         <Image style={styles.mainInfoImage} source={med1}/>
                     </View>
                     <View style={styles.mainInfoTextWrapper}>
                         <Text style={styles.mainInfoText}>
-                            {props.data.name}
+                            {/* {props.data.name} */}
+                            Abacate
                         </Text>
                     </View>
+                    <View style={styles.mainInfoAdvert}/>
                 </View>
-                <View style={styles.secondaryInfo}>
+                <View style={styles.secondaryInfoContainer}>
                     <View style={styles.secondaryInfoSub1}>
                         <InfoText 
                             title="Dias de uso" 
-                            content={`${props.data.usageDays}`}
+                            // content={`${props.data.usageDays}`}
+                            content="20"
                             aditional="dias"
                         />
                         <InfoText 
                             title="Dosagem" 
-                            content={`${props.data.dose}`}
-                            aditional={`${props.data.doseCategory}`}
+                            // content={`${props.data.dose}`}
+                            // aditional={`${props.data.doseCategory}`}
+                            content={"20"}
+                            aditional={"mg"}
                         />
                         <InfoText 
-                            title="Horario uso anterior" 
-                            content={`${props.data.lastUsageTime}`}
+                            title="Horario do uso anterior" 
+                            // content={`${props.data.lastUsageTime}`}
                             aditional=""
+                            content={"20:00"}
                         />
                     </View>
                     <View style={styles.secondaryInfoSub2}>
                         <InfoText 
                             title="Quantidade de uso" 
-                            content={`${props.data.usageCount}`}
+                            // content={`${props.data.usageCount}`}
                             aditional="vezes"
+                            content={"20"}
                         />
                         <InfoText 
                             title="Intervalo de uso" 
-                            content={`${props.data.useInterval}`}
+                            // content={`${props.data.useInterval}`}
                             aditional="horas"
+                            content={"5"}
+
                         />
                         <InfoText 
-                            title="Horario próximo uso" 
-                            content={`${props.data.nextUsageTime}`}
+                            title="Horario do próximo uso" 
+                            // content={`${props.data.nextUsageTime}`}
                             aditional=""
+                            content={"00:00"}
                         />
                     </View>
-                    
                 </View>
-                <View style={styles.takenInformation}>
+                <View style={styles.takenInformationContainer}>
                     <Text style={styles.takenInformationText}>
-                        {status(props.data.status)}
+                        {/* {status(props.data.status)} */}
+                        {status(0)}
                     </Text>
                 </View>
-                <View style={styles.confirmTakenButton}>
-                    <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => Alert.alert('Simple Button pressed')}>
+                <View style={styles.confirmTakenButtonContainer}>
+                    <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => Alert.alert("Simple Button pressed")}>
                         <Text style={styles.buttonText}>Tomei</Text>
                     </TouchableOpacity>  
                 </View>
@@ -137,23 +158,41 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
 
-        backgroundColor: '#fffa00'
+        // backgroundColor: "#fffa00"
     },
     medicineDetailContent: {
         display: "flex", 
         flexDirection: "column",
-        height: "74%",
         width: "94%",
-        marginTop: "4%",
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
+        height: "100%",
 
-        backgroundColor: "orange"
+        // backgroundColor: "orange"
     },
-    mainInfo: {
+    returnButtonContainer: {
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        height: "10%",
+        justifyContent: "space-between",
+        alignItems: "center",
+        // backgroundColor: "grey"
+    },
+    returnButton: {
+        width: "15%",
+        height: "60%",
+        justifyContent: "center",
+        alignItems: "center",
+        // backgroundColor: "yellow"
+    },
+    returnButtonImage: {
+        width: "55%",
+        height: "100%",
+        resizeMode: "contain",
+    },
+    mainInfoContainer: {
         display: "flex",
         flexDirection: "column",
-        height: "26%",
+        height: "19%",
         width: "100%",
         alignItems: "center",
         borderTopLeftRadius: 5,
@@ -180,7 +219,7 @@ const styles = StyleSheet.create({
     mainInfoImage: {
         width: "80%",
         height: "80%",
-        resizeMode: 'contain',
+        resizeMode: "contain",
     },
     mainInfoTextWrapper: {
         display: "flex",
@@ -194,11 +233,11 @@ const styles = StyleSheet.create({
     mainInfoText: {
         fontSize: 35
     },
-    secondaryInfo: {
+    secondaryInfoContainer: {
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        height: "40%",
+        height: "37%",
 
         // backgroundColor: "pink"
     },
@@ -207,7 +246,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         width: "50%",
         height: "100%",
-        justifyContent: "flex-start",
+        justifyContent: "flex-end",
         alignItems: "center",
 
         // backgroundColor: "red"
@@ -217,14 +256,14 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         width: "50%",
         height: "100%",
-        justifyContent: "flex-start",
+        justifyContent: "flex-end",
         alignItems: "center",
 
         // backgroundColor: "brown"
     },
-    takenInformation: {
+    takenInformationContainer: {
         display: "flex",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         alignItems: "center",
         width: "100%",
         height: "18%",
@@ -235,7 +274,7 @@ const styles = StyleSheet.create({
         fontSize: 34,
         fontWeight: "bold"
     },
-    confirmTakenButton: {
+    confirmTakenButtonContainer: {
         width: "100%",
         height: "16%",
         justifyContent: "center",
@@ -244,7 +283,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width: "55%",
-        height: "60%",
+        height: "45%",
         borderRadius: 30,
         justifyContent: "center",
         alignItems: "center",
@@ -265,8 +304,8 @@ const infoTextStyle = StyleSheet.create({
         height: "25%",
         justifyContent: "center",
         alignItems: "flex-start",
-        marginTop: "7%",
-        backgroundColor: "white",
+        marginTop: "2%",
+        // backgroundColor: "white",
     },
     textTitleContainer: {
         width: "100%",

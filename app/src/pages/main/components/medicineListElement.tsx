@@ -7,7 +7,7 @@ import {
     Alert,
     Pressable,
     TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 
 // import medicine1 from "../../assets/icons/med6.png"
 
@@ -19,7 +19,7 @@ interface medicineData {
 
 export default function MedicineListElement(props: medicineData) {
     return (
-        <Pressable style={styles.elementMain} onPress={() => Alert.alert('Simple Button pressed')}>
+        <Pressable style={styles.elementMain} onPress={() => Alert.alert("Simple Button pressed")}>
             <View style={styles.imageContainer}>
                 <View style={styles.imageWrapper}>
                     {/* <Image style={styles.image} source={medicine1}/> */}
@@ -116,6 +116,6 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        resizeMode: 'contain',
+        resizeMode: "contain",
     }
 }); 

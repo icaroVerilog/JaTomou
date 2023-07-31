@@ -1,43 +1,45 @@
-import React, {useState, useEffect} from 'react'
-import SelectDropdown from 'react-native-select-dropdown'
-import { getStatusBarHeight } from 'react-native-status-bar-height'
-import { 
-    StyleSheet, 
-    Text, 
-    View, 
-    TextInput,
-    TouchableWithoutFeedback,
-    Keyboard,
-    TouchableOpacity
-} from 'react-native'
+import React                        from "react"
+import { useEffect }                from "react"
+import { useState }                 from "react"
+import { Text }                     from "react-native"
+import { View }                     from "react-native"
+import { TextInput }                from "react-native"
+import { TouchableWithoutFeedback } from "react-native"
+import { Keyboard }                 from "react-native"
+import { TouchableOpacity }         from "react-native"
+import { Image }                    from "react-native"
+import { StyleSheet }               from "react-native"
+import { StatusBar }                from "react-native"
+import Database from "../../database/database"
 
-import { Medicine } from "../../types"
+import SelectDropdown               from "react-native-select-dropdown"
+import DatePicker                   from "./components/datepicker"
 
-export default function NewMedicine() {
+import leftArrow                    from "../../../assets/icons/general/back.png"
+
+
+
+export default function NewMedicine({navigation}: any) {
+
+    const database = new Database()
+
+    const [namePlaceholder, setNamePlaceholder] = useState<string>("Digite o nome do medicamento")
 
     const [medicine, setMedicine] = useState(
         {
             name: "",
             useIntervalType: 0,
             useInterval: "",
-            // doseType: "",
-            // dose: "",
             doseTime: ""
         }
     )
     
-    const useType = ["Diário", "Temporário"]
 
-
-    
     function handleMedicineNameChange(value: string){
-        console.log(value)
         setMedicine((medicine) => ({...medicine, name: value}))
     }
 
     function handleUseIntervalTypeChange(value: string){
-        console.log(value)
-
         if (value === "Diário") {
             setMedicine((medicine) => ({...medicine, useIntervalType: 1, useInterval: "24:00"}))
         }
@@ -50,39 +52,45 @@ export default function NewMedicine() {
         setMedicine((medicine) => ({...medicine, useInterval: value}))   
     }
 
-    // function handleDoseTypeChange(value: string){
-    //     setMedicine((medicine) => ({...medicine, doseType: value}))   
-    // }
-
-    // function handleDoseChange(value: string){
-    //     setMedicine((medicine) => ({...medicine, dose: value}))   
-    // }
-
     function handleDoseTimeChange(value: string){
         setMedicine((medicine) => ({...medicine, doseTime: value}))   
     }
 
+    function handleCreateMedicine(){
+        if (medicine.name == ""){
+            console.log("a")
+        }
+        if (medicine.doseTime == ""){
+            console.log("va")
+        }
+        console.log(medicine)
+        database.persistMedicine(medicine)
+        navigation.navigate("Main")
+    }
 
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.content}>
-                    <View style={styles.returnButton}>
-
+                    <View style={styles.returnButtonContainer}>
+                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                            <Image style={styles.returnButtonImage} source={leftArrow}/>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.instructions}>
                         <Text style={styles.instructionsText}>
                             Insira os dados do medicamento para que possamos te lembrar no horario correto
                         </Text>
                     </View>
-                    <View style={styles.fields}>
+                    <View style={styles.dataFields}>
                         <View style={styles.fieldWrapper}>
                             <TextInput 
                                 style={[
                                     textfieldStyle.input, // Se estiver focado, a borda fica verde
                                     // (isFocused || isFilled) && {borderColor: "green"},
                                 ]}
-                                placeholder={"Digite o nome do medicamento"} 
+                                placeholder={namePlaceholder} 
                                 // onBlur={handleInputBlur}
                                 // onFocus={handleInputFocus}
                                 onChangeText={handleMedicineNameChange}
@@ -92,60 +100,25 @@ export default function NewMedicine() {
                             <SelectDropdown
                                 buttonStyle={dropdownStyle.button}
                                 buttonTextStyle={dropdownStyle.text}
-                                defaultButtonText='Selecione o tipo de uso'
-                                data={useType}
-                                onSelect={(selectedItem) => {
-                                    handleUseIntervalTypeChange(selectedItem)
-                                }}
-                                buttonTextAfterSelection={(selectedItem) => {
-                                    return selectedItem
-                                }}
-                                rowTextForSelection={(item, index) => {
-                                    // text represented for each item in dropdown
-                                    // if data array is an array of objects then return item.property to represent item in dropdown
-                                    return item
-                                }}
+                                defaultButtonText="Selecione o tipo de uso"
+                                data={["Diário", "Temporário"]}
+                                onSelect={(selectedItem) => {handleUseIntervalTypeChange(selectedItem)}}
+                                buttonTextAfterSelection={(selectedItem) => {return selectedItem}}
+                                rowTextForSelection={(item, index) => {return item}}
                             />
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 1 ? {display: "flex"}: {display: "none"}]}>
-                            <TextInput 
-                                style={[
-                                    textfieldStyle.input, // Se estiver focado, a borda fica verde
-                                    // (isFocused || isFilled) && {borderColor: "green"},
-                                ]}
-                                placeholder={"Digite o horário de uso"} 
-                                // onBlur={handleInputBlur}
-                                // onFocus={handleInputFocus}
-                                onChangeText={handleMedicineNameChange}
-                            />
+                            <DatePicker getData={handleDoseTimeChange} placeholder="Selecione o horário de uso"/>
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
-                            <TextInput 
-                                style={[
-                                    textfieldStyle.input, // Se estiver focado, a borda fica verde
-                                    // (isFocused || isFilled) && {borderColor: "green"},
-                                ]}
-                                placeholder={"Insira o intervalo entre os usos"} 
-                                // onBlur={handleInputBlur}
-                                // onFocus={handleInputFocus}
-                                onChangeText={handleUseIntervalChange}
-                            />
+                            <DatePicker getData={handleDoseTimeChange} placeholder="Selecione o horário do primeiro uso"/>
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
-                            <TextInput 
-                                style={[
-                                    textfieldStyle.input, // Se estiver focado, a borda fica verde
-                                    // (isFocused || isFilled) && {borderColor: "green"},
-                                ]}
-                                placeholder={"Insira o horario do primeiro uso"} 
-                                // onBlur={handleInputBlur}
-                                // onFocus={handleInputFocus}
-                                onChangeText={handleUseIntervalChange}
-                            />
+                            <DatePicker getData={handleUseIntervalChange} placeholder="Selecione o intervalo de uso"/>
                         </View>
                     </View>
                     <View style={styles.confirmButton}>
-                        <TouchableOpacity style={confirmButtomStyle.button}>
+                        <TouchableOpacity style={confirmButtomStyle.button} activeOpacity={0.7} onPress={handleCreateMedicine}>
                             <Text style={confirmButtomStyle.text}>
                                 Criar
                             </Text>
@@ -160,23 +133,37 @@ export default function NewMedicine() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: getStatusBarHeight(),
-        backgroundColor: "red"
+        alignItems: "center",
+        justifyContent: "center",
+        // marginTop: getStatusBarHeight(),
+        backgroundColor: "#F2F2F2"
     },
     content: {
         display: "flex", 
         flexDirection: "column",
         height: "100%",
         width: "94%",
-        backgroundColor: "white",
+        backgroundColor: "#F2F2F2",
     },
-    returnButton: {
+    returnButtonContainer: {
         display: "flex",
         width: "100%",
         height: "10%",
-        backgroundColor: "gray"
+        justifyContent: "center",
+        alignItems: "flex-end",
+        // backgroundColor: "grey"
+    },
+    returnButton: {
+        width: "15%",
+        height: "60%",
+        justifyContent: "center",
+        alignItems: "center",
+        // backgroundColor: "yellow"
+    },
+    returnButtonImage: {
+        width: "55%",
+        height: "100%",
+        resizeMode: "contain",
     },
     instructions: {
         display: "flex",
@@ -190,18 +177,18 @@ const styles = StyleSheet.create({
         fontSize: 22,
         textAlign: "center"
     },
-    fields: {
+    dataFields: {
         display: "flex",
         width: "100%",
         height: "55%",
         paddingTop: "10%",
         justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "#FFFFFF"
+        // backgroundColor: "#FF00FF"
     },
     fieldWrapper: {
         width: "85%",
-        height: "12%",
+        height: "13%",
         marginBottom: "6%",
         // backgroundColor: "gray"
     },
@@ -210,7 +197,7 @@ const styles = StyleSheet.create({
         height: "20%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "yellow"
+        // backgroundColor: "yellow"
     }
 })
 
@@ -221,7 +208,7 @@ const textfieldStyle = StyleSheet.create({
         color: "#000000",
         width: "100%",
         height: "100%",
-        fontSize: 18,
+        fontSize: 19,
         padding: 0,
         textAlign: "center"
     }
@@ -237,7 +224,7 @@ const dropdownStyle = StyleSheet.create({
     },
     text: {
         color: "#707070",
-        fontSize: 18,
+        fontSize: 19,
     }
 })
 

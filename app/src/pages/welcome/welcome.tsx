@@ -1,20 +1,16 @@
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import { 
-    StyleSheet, 
-    Text, 
-    View, 
-    StatusBarStyle,
-    Image,
-    Alert,
-    Pressable,
-    TouchableOpacity
-} from 'react-native';
+import { StyleSheet, Text, View, Image, Alert, Pressable, TouchableOpacity, StatusBar } from 'react-native'
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 
 // import welcomeImg from "../../../assets/imgs/welcomeImg.png"
 
-export default function Welcome() {
+export default function Welcome({navigation}: any) {
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="light-content" backgroundColor="#FFFFFF" />
             <View style={styles.infoContainer}>
                 <View style={styles.infoImageContainer}>
                     {/* <Image style={styles.infoimage} source={welcomeImg}/> */}
@@ -26,7 +22,7 @@ export default function Welcome() {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => Alert.alert('Simple Button pressed')}>
+                <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => navigation.navigate('Main')}>
                     <Text style={styles.buttonText}>Começar</Text>
                     {/* <ChevronRight></ChevronRight> */}
                 </TouchableOpacity>  
@@ -43,7 +39,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fffaaa',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: getStatusBarHeight()
     },
     infoContainer: {
         width: "100%",
