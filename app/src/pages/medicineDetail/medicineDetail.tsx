@@ -14,44 +14,77 @@ import {
     StatusBar
 } from "react-native"
 
+import Database from "../../database/database"
+
+
 import leftArrow from "../../../assets/icons/general/back.png"
-import trash    from "../../../assets/icons/general/trash2.png"
+import trash     from "../../../assets/icons/general/trash2.png"
+import med1      from "../../../assets/icons/med6.png"
+import DeleteAnimation from "../../components/deleteAnimation"
 
-import med1 from "../../../assets/icons/med6.png"
+export default function MedicineDetail({ route, navigation }:any) {
 
-function status(statusCode: number) {
-    if (statusCode == 0){
-        return "Não Tomado"
+    const database = new Database()
+
+    const [animationState, setAnimationState] = useState<boolean>(false)
+
+
+    const [data, setData] = useState<Medicine>({
+        id           : "",
+        name         : "medicine",
+        usageDays    : 0,
+        usageCount   : 0,
+        useInterval  : 0,
+        lastUsageTime: "N/A",
+        nextUsageTime: "N/A",
+        status       : 0
+    })
+
+    useEffect(() =>{
+        setData(
+            {
+                id: route.params.id,
+                name: route.params.name,
+                usageDays: JSON.parse(route.params.usageDays),
+                usageCount: JSON.parse(route.params.usageCount),
+                useInterval: JSON.parse(route.params.useInterval),
+                lastUsageTime: route.params.lastUsageTime,
+                nextUsageTime: route.params.nextUsageTime,
+                status: JSON.parse(route.params.status)
+            }
+        )
+
+    },[])
+
+    function statusParser(statusCode: number) {
+        if (statusCode == 0){
+            return "Não Tomado"
+        }
+        if (statusCode == 1){
+            return "Tomado"
+        }
+        if (statusCode == 2){
+            return "Atrasado"
+        }
     }
-    if (statusCode == 1){
-        return "Tomado"
-    }
-    if (statusCode == 2){
-        return "Atrasado"
-    }
-}
 
-export default function MedicineDetail({navigation}: any) {
+    function handleDeleteMedicine(id:string){
+        database.deleteMedicine(id)
+        setAnimationState(true)
+    }
 
-    // const [data, setData] = useState<Medicine>({
-    //     id           : 0,
-    //     name         : "medicine",
-    //     usageDays    : 0,
-    //     usageCount   : 0,
-    //     dose         : 0,
-    //     doseCategory : "N/A",
-    //     useInterval  : 0,
-    //     lastUsageTime: "N/A",
-    //     nextUsageTime: "N/A",
-    //     status       : 0
-    // })
+    function handleAnimationEnd(){
+        setAnimationState(false)
+        navigation.navigate("Main")
+    }
 
     return (
         <View style={styles.medicineDetail}>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
-            <View style={styles.medicineDetailContent}>
+            <DeleteAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+            <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
                 <View style={styles.returnButtonContainer}>
-                    <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                    <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
                         <Image style={styles.returnButtonImage} source={trash}/>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
@@ -64,8 +97,7 @@ export default function MedicineDetail({navigation}: any) {
                     </View>
                     <View style={styles.mainInfoTextWrapper}>
                         <Text style={styles.mainInfoText}>
-                            {/* {props.data.name} */}
-                            Abacate
+                            {data.name}
                         </Text>
                     </View>
                     <View style={styles.mainInfoAdvert}/>
@@ -74,8 +106,7 @@ export default function MedicineDetail({navigation}: any) {
                     <View style={styles.secondaryInfoSub1}>
                         <InfoText 
                             title="Dias de uso" 
-                            // content={`${props.data.usageDays}`}
-                            content="20"
+                            content={`${data.usageDays}`}
                             aditional="dias"
                         />
                         <InfoText 
@@ -87,37 +118,32 @@ export default function MedicineDetail({navigation}: any) {
                         />
                         <InfoText 
                             title="Horario do uso anterior" 
-                            // content={`${props.data.lastUsageTime}`}
+                            content={`${data.lastUsageTime}`}
                             aditional=""
-                            content={"20:00"}
                         />
                     </View>
                     <View style={styles.secondaryInfoSub2}>
                         <InfoText 
                             title="Quantidade de uso" 
-                            // content={`${props.data.usageCount}`}
+                            content={`${data.usageCount}`}
                             aditional="vezes"
-                            content={"20"}
                         />
                         <InfoText 
                             title="Intervalo de uso" 
-                            // content={`${props.data.useInterval}`}
+                            content={`${data.useInterval}`}
                             aditional="horas"
-                            content={"5"}
 
                         />
                         <InfoText 
                             title="Horario do próximo uso" 
-                            // content={`${props.data.nextUsageTime}`}
+                            content={`${data.nextUsageTime}`}
                             aditional=""
-                            content={"00:00"}
                         />
                     </View>
                 </View>
                 <View style={styles.takenInformationContainer}>
                     <Text style={styles.takenInformationText}>
-                        {/* {status(props.data.status)} */}
-                        {status(0)}
+                        {statusParser(data.status)}
                     </Text>
                 </View>
                 <View style={styles.confirmTakenButtonContainer}>
@@ -166,7 +192,7 @@ const styles = StyleSheet.create({
         width: "94%",
         height: "100%",
 
-        // backgroundColor: "orange"
+        backgroundColor: "#F2F2F2"
     },
     returnButtonContainer: {
         display: "flex",
@@ -192,7 +218,7 @@ const styles = StyleSheet.create({
     mainInfoContainer: {
         display: "flex",
         flexDirection: "column",
-        height: "19%",
+        height: "25%",
         width: "100%",
         alignItems: "center",
         borderTopLeftRadius: 5,
@@ -212,7 +238,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
         alignItems: "center",
         width: "30%",
-        height: "60%",
+        height: "50%",
 
         // backgroundColor: "green"
     },
@@ -226,7 +252,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: "40%",
+        height: "50%",
 
         // backgroundColor: "grey"
     },
@@ -237,7 +263,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        height: "37%",
+        height: "31%",
 
         // backgroundColor: "pink"
     },
@@ -246,7 +272,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         width: "50%",
         height: "100%",
-        justifyContent: "flex-end",
+        justifyContent: "center",
         alignItems: "center",
 
         // backgroundColor: "red"
@@ -256,7 +282,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         width: "50%",
         height: "100%",
-        justifyContent: "flex-end",
+        justifyContent: "center",
         alignItems: "center",
 
         // backgroundColor: "brown"

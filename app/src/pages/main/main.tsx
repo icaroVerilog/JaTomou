@@ -13,107 +13,38 @@ import {
     StatusBar
 } from "react-native";
 
+import Database from "../../database/database";
 import MedicineListElement from "./components/medicineListElement"
-import MedicineDetail      from "./components/medicineDetailElement"
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
-const data = [
-    {
-        id: 0,
-        name: "Dipirona",
-        usageDays: 2,
-        usageCount: 10,
-        dose: 10,
-        doseCategory: "mg",
-        useInterval: 24,
-        lastUsageTime: "N/A",
-        nextUsageTime: "14:00",
-        status: 0
-    },
-    {
-        id: 1,
-        name: "Dipirona",
-        usageDays: 2,
-        usageCount: 10,
-        dose: 10,
-        doseCategory: "mg",
-        useInterval: 24,
-        lastUsageTime: "N/A",
-        nextUsageTime: "14:00",
-        status: 0
-    },
-    {
-        id: 2,
-        name: "Dipirona",
-        usageDays: 2,
-        usageCount: 10,
-        dose: 10,
-        doseCategory: "mg",
-        useInterval: 24,
-        lastUsageTime: "N/A",
-        nextUsageTime: "14:00",
-        status: 0
-    },
-    {
-        id: 3,
-        name: "Dipirona",
-        usageDays: 2,
-        usageCount: 10,
-        dose: 10,
-        doseCategory: "mg",
-        useInterval: 24,
-        lastUsageTime: "N/A",
-        nextUsageTime: "14:00",
-        status: 0
-    },
-    {
-        id: 4,
-        name: "Dipirona",
-        usageDays: 2,
-        usageCount: 10,
-        dose: 10,
-        doseCategory: "mg",
-        useInterval: 24,
-        lastUsageTime: "N/A",
-        nextUsageTime: "14:00",
-        status: 0
-    },
-    {
-        id: 5,
-        name: "Dipirona",
-        usageDays: 2,
-        usageCount: 10,
-        dose: 10,
-        doseCategory: "mg",
-        useInterval: 24,
-        lastUsageTime: "N/A",
-        nextUsageTime: "14:00",
-        status: 0
-    },
-    {
-        id: 6,
-        name: "Dipirona",
-        usageDays: 2,
-        usageCount: 10,
-        dose: 10,
-        doseCategory: "mg",
-        useInterval: 24,
-        lastUsageTime: "N/A",
-        nextUsageTime: "14:00",
-        status: 0
-    }
-]
+
 
 export default function Main({navigation}: any){
+
+    const database = new Database()
+
+    const [data, setData] = useState<Medicine[]>([])
+
+    async function handleFetchData(){
+        const data = await database.retrieveMedicines()
+        setData(data)
+    }
+
+    useFocusEffect(useCallback(() => {
+        handleFetchData()
+    },[]))
+
+
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#FFFFFF" />
+            <StatusBar barStyle="light-content" backgroundColor="#F2F2F2" />
             <View style={styles.profile}>
 
             </View>
-            {/* <MedicineDetail data={data[0]}/> */}
             <View style={styles.medicines}>
                 <View style={styles.newMedicine}>
-                    <TouchableOpacity style={styles.newMedicineButton} onPress={() => navigation.navigate('NewMedicine')}>
+                    <TouchableOpacity style={styles.newMedicineButton} onPress={() => navigation.navigate("NewMedicine")}>
                         {/* <View style={newMedicineButtonStyle.icon}>
 
                         </View> */}
@@ -127,8 +58,8 @@ export default function Main({navigation}: any){
                 <FlatList
                     style={styles.medicineListScroll}
                     data={data}
-                    renderItem={({item}) => <MedicineListElement name={item.name} status={"Nao Tomado"} nextUse={"00:00"}/>}
-                    // keyExtractor={item => item.id}
+                    renderItem={({item}) => <MedicineListElement data={item} navigation={navigation}/>}
+                    keyExtractor={item => item.id}
                 />
             </View>
         </View>
@@ -140,20 +71,19 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
-        // marginTop: getStatusBarHeight(),
         backgroundColor: "#FFFFFF"
     },
     profile: {
         width: "100%",
         height: "22%",
-        backgroundColor: "#77FF00"
+        backgroundColor: "#F2F2F2"
     },
     newMedicine: {
         width: "100%",
         height: "14%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#fffa00"
+        backgroundColor: "#FFFFFF"
     },
     newMedicineButton: {
         display: "flex",
@@ -177,11 +107,12 @@ const styles = StyleSheet.create({
     medicineListScroll: {
         width: "100%",
         height: "67%",
-        backgroundColor: "#AAFF00"
+        paddingTop: "4%",
+        paddingBottom: "5%",
+        backgroundColor: "#F2F2F2"
     },
     medicines: {
         width: "100%",
         height: "78%",
-        backgroundColor: "red"
     }
 })

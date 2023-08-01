@@ -10,12 +10,13 @@ import { TouchableOpacity }         from "react-native"
 import { Image }                    from "react-native"
 import { StyleSheet }               from "react-native"
 import { StatusBar }                from "react-native"
-import Database from "../../database/database"
 
 import SelectDropdown               from "react-native-select-dropdown"
 import DatePicker                   from "./components/datepicker"
 
+import Database                     from "../../database/database"
 import leftArrow                    from "../../../assets/icons/general/back.png"
+import OkAnimation                  from "../../components/okAnimation"
 
 
 
@@ -23,13 +24,13 @@ export default function NewMedicine({navigation}: any) {
 
     const database = new Database()
 
-    const [namePlaceholder, setNamePlaceholder] = useState<string>("Digite o nome do medicamento")
+    const [animationState, setAnimationState] = useState<boolean>(false)
 
     const [medicine, setMedicine] = useState(
         {
             name: "",
             useIntervalType: 0,
-            useInterval: "",
+            useInterval: 0,
             doseTime: ""
         }
     )
@@ -41,14 +42,14 @@ export default function NewMedicine({navigation}: any) {
 
     function handleUseIntervalTypeChange(value: string){
         if (value === "Diário") {
-            setMedicine((medicine) => ({...medicine, useIntervalType: 1, useInterval: "24:00"}))
+            setMedicine((medicine) => ({...medicine, useIntervalType: 1, useInterval: 24}))
         }
         if (value === "Temporário") {
             setMedicine((medicine) => ({...medicine, useIntervalType: 2}))  
         }
     }
 
-    function handleUseIntervalChange(value: string){
+    function handleUseIntervalChange(value: number){
         setMedicine((medicine) => ({...medicine, useInterval: value}))   
     }
 
@@ -57,22 +58,29 @@ export default function NewMedicine({navigation}: any) {
     }
 
     function handleCreateMedicine(){
+        Keyboard.dismiss
         if (medicine.name == ""){
             console.log("a")
         }
         if (medicine.doseTime == ""){
             console.log("va")
         }
-        console.log(medicine)
         database.persistMedicine(medicine)
+        setAnimationState(true)
+    }
+
+    function handleAnimationEnd(){
+        setAnimationState(false)
         navigation.navigate("Main")
     }
+
 
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
+            <OkAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.content}>
+                <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
                         <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
                             <Image style={styles.returnButtonImage} source={leftArrow}/>
@@ -90,7 +98,7 @@ export default function NewMedicine({navigation}: any) {
                                     textfieldStyle.input, // Se estiver focado, a borda fica verde
                                     // (isFocused || isFilled) && {borderColor: "green"},
                                 ]}
-                                placeholder={namePlaceholder} 
+                                placeholder={"Digite o nome do medicamento"} 
                                 // onBlur={handleInputBlur}
                                 // onFocus={handleInputFocus}
                                 onChangeText={handleMedicineNameChange}
@@ -114,7 +122,19 @@ export default function NewMedicine({navigation}: any) {
                             <DatePicker getData={handleDoseTimeChange} placeholder="Selecione o horário do primeiro uso"/>
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
-                            <DatePicker getData={handleUseIntervalChange} placeholder="Selecione o intervalo de uso"/>
+                        <SelectDropdown
+                                buttonStyle={dropdownStyle.button}
+                                buttonTextStyle={dropdownStyle.text}
+                                defaultButtonText="Selecione o intervalo de uso"
+                                data={[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]}
+                                onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
+                                buttonTextAfterSelection={(selectedItem) => {
+                                    return selectedItem == 1 ? `${selectedItem} hora`: `${selectedItem} horas`
+                                }}
+                                rowTextForSelection={(item, index) => {
+                                    return item == 1 ? `${item} hora`: `${item} horas`
+                                }}
+                            />
                         </View>
                     </View>
                     <View style={styles.confirmButton}>

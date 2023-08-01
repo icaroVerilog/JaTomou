@@ -1,41 +1,42 @@
-import { 
-    StyleSheet, 
-    Text, 
-    View, 
-    StatusBarStyle,
-    Image,
-    Alert,
-    Pressable,
-    TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, Image, Alert, Pressable } from "react-native"
+import medicine1 from "../../../../assets/icons/med6.png"
 
-// import medicine1 from "../../assets/icons/med6.png"
 
-interface medicineData {
-    name:                 String,
-    status:               String,
-    nextUse:              String
-}
+export default function MedicineListElement(props: {data:Medicine, navigation: any}) {
 
-export default function MedicineListElement(props: medicineData) {
+    function statusParser(statusCode: number) {
+        if (statusCode == 0){
+            return "Não Tomado"
+        }
+        if (statusCode == 1){
+            return "Tomado"
+        }
+        if (statusCode == 2){
+            return "Atrasado"
+        }
+    }
+
     return (
-        <Pressable style={styles.elementMain} onPress={() => Alert.alert("Simple Button pressed")}>
+        <Pressable 
+            style={styles.elementMain} 
+            onPress={() => props.navigation.navigate("MedicineDetail", props.data)
+        }>
             <View style={styles.imageContainer}>
                 <View style={styles.imageWrapper}>
-                    {/* <Image style={styles.image} source={medicine1}/> */}
+                    <Image style={styles.image} source={medicine1}/>
                 </View>
             </View>
             <View style={styles.contentWrapper}>
                 <Text style={styles.medicineName}>
-                    {props.name}
+                    {props.data.name}
                 </Text>
                 <Text style={styles.medicineStatus}>
-                    {props.status}
+                    {statusParser(props.data.status)}
                 </Text>
             </View>
             <View style={styles.timeStampWrapper}>
                 <Text style={styles.timeStamp}>
-                    {props.nextUse}
+                    {props.data.nextUsageTime}
                 </Text>
             </View>
             <View style={styles.visualInfo}>
@@ -118,4 +119,4 @@ const styles = StyleSheet.create({
         height: "100%",
         resizeMode: "contain",
     }
-}); 
+}) 
