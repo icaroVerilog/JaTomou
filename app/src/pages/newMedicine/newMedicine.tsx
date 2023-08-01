@@ -24,6 +24,13 @@ export default function NewMedicine({navigation}: any) {
 
     const database = new Database()
 
+    const [focusedNameField, setFocusedNameField]                       = useState(false)
+    const [filledNameField, setFilledNameField]                         = useState(false)
+    const [focusedUseIntervalTypeField, setFocusedUseIntervalTypeField] = useState(false)
+    const [filledUseIntervalTypeField, setFilledUseIntervalTypeField]   = useState(false)
+    const [focusedUseIntervalField, setFocusedUseIntervalField]         = useState(false)
+    const [filledUseIntervalField, setFilledUseIntervalField]           = useState(false)
+
     const [animationState, setAnimationState] = useState<boolean>(false)
 
     const [medicine, setMedicine] = useState(
@@ -31,7 +38,7 @@ export default function NewMedicine({navigation}: any) {
             name: "",
             useIntervalType: 0,
             useInterval: 0,
-            doseTime: ""
+            useTime: ""
         }
     )
     
@@ -42,19 +49,22 @@ export default function NewMedicine({navigation}: any) {
 
     function handleUseIntervalTypeChange(value: string){
         if (value === "Diário") {
+            setFilledUseIntervalTypeField(true)
             setMedicine((medicine) => ({...medicine, useIntervalType: 1, useInterval: 24}))
         }
         if (value === "Temporário") {
+            setFilledUseIntervalTypeField(true)
             setMedicine((medicine) => ({...medicine, useIntervalType: 2}))  
         }
     }
 
     function handleUseIntervalChange(value: number){
         setMedicine((medicine) => ({...medicine, useInterval: value}))   
+        setFilledUseIntervalField(true)
     }
 
-    function handleDoseTimeChange(value: string){
-        setMedicine((medicine) => ({...medicine, doseTime: value}))   
+    function handleUseTimeChange(value: string){
+        setMedicine((medicine) => ({...medicine, useTime: value}))   
     }
 
     function handleCreateMedicine(){
@@ -62,11 +72,40 @@ export default function NewMedicine({navigation}: any) {
         if (medicine.name == ""){
             console.log("a")
         }
-        if (medicine.doseTime == ""){
+        if (medicine.useTime == ""){
             console.log("va")
         }
         database.persistMedicine(medicine)
         setAnimationState(true)
+    }
+
+    /* Visual control functions */
+
+    function handleNameFieldFocus(){
+        setFocusedNameField(true)
+    }
+
+    function handleNameFieldBlur(){
+        setFocusedNameField(false)
+        setFilledNameField(!!medicine.name)
+    }
+
+    function handleUseIntervalTypeFieldFocus(){
+        setFocusedUseIntervalTypeField(true)
+    }
+
+    function handleUseIntervalTypeFieldBlur(){
+        setFocusedUseIntervalTypeField(false)
+        setFilledUseIntervalTypeField(!!medicine.useIntervalType)
+    }
+
+    function handleUseIntervalFieldFocus(){
+        setFocusedUseIntervalField(true)
+    }
+
+    function handleUseIntervalFieldBlur(){
+        setFocusedUseIntervalField(false)
+        setFilledUseIntervalField(!!medicine.useInterval)
     }
 
     function handleAnimationEnd(){
@@ -95,46 +134,63 @@ export default function NewMedicine({navigation}: any) {
                         <View style={styles.fieldWrapper}>
                             <TextInput 
                                 style={[
-                                    textfieldStyle.input, // Se estiver focado, a borda fica verde
-                                    // (isFocused || isFilled) && {borderColor: "green"},
+                                    textfieldStyle.input,
+                                    (focusedNameField || filledNameField) && {borderColor: "green"},
                                 ]}
                                 placeholder={"Digite o nome do medicamento"} 
-                                // onBlur={handleInputBlur}
-                                // onFocus={handleInputFocus}
+                                onBlur={handleNameFieldBlur}
+                                onFocus={handleNameFieldFocus}
                                 onChangeText={handleMedicineNameChange}
                             />
                         </View>
                         <View style={styles.fieldWrapper}>
                             <SelectDropdown
-                                buttonStyle={dropdownStyle.button}
+                                onBlur={handleUseIntervalTypeFieldBlur}
+                                onFocus={handleUseIntervalTypeFieldFocus}
+                                buttonStyle={[
+                                    dropdownStyle.button, 
+                                    (focusedUseIntervalTypeField || filledUseIntervalTypeField) && {borderColor: "green"}
+                                ]}
                                 buttonTextStyle={dropdownStyle.text}
                                 defaultButtonText="Selecione o tipo de uso"
-                                data={["Diário", "Temporário"]}
+                                data={
+                                    ["Diário", "Temporário"]
+                                }
                                 onSelect={(selectedItem) => {handleUseIntervalTypeChange(selectedItem)}}
                                 buttonTextAfterSelection={(selectedItem) => {return selectedItem}}
                                 rowTextForSelection={(item, index) => {return item}}
                             />
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 1 ? {display: "flex"}: {display: "none"}]}>
-                            <DatePicker getData={handleDoseTimeChange} placeholder="Selecione o horário de uso"/>
+                            <DatePicker 
+                                getData={handleUseTimeChange} 
+                                placeholder="Selecione o horário de uso"
+                            />
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
-                            <DatePicker getData={handleDoseTimeChange} placeholder="Selecione o horário do primeiro uso"/>
+                            <DatePicker 
+                                getData={handleUseTimeChange} 
+                                placeholder="Selecione o horário do primeiro uso"
+                            />
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
                         <SelectDropdown
-                                buttonStyle={dropdownStyle.button}
-                                buttonTextStyle={dropdownStyle.text}
-                                defaultButtonText="Selecione o intervalo de uso"
-                                data={[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]}
-                                onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
-                                buttonTextAfterSelection={(selectedItem) => {
-                                    return selectedItem == 1 ? `${selectedItem} hora`: `${selectedItem} horas`
-                                }}
-                                rowTextForSelection={(item, index) => {
-                                    return item == 1 ? `${item} hora`: `${item} horas`
-                                }}
-                            />
+                            onBlur={handleUseIntervalFieldBlur}
+                            onFocus={handleUseIntervalFieldFocus}
+                            buttonStyle={[dropdownStyle.button, (focusedUseIntervalField || filledUseIntervalField) && {borderColor: "green"}]}
+                            buttonTextStyle={dropdownStyle.text}
+                            defaultButtonText="Selecione o intervalo de uso"
+                            data={
+                                [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+                            }
+                            onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
+                            buttonTextAfterSelection={(selectedItem) => {
+                                return selectedItem == 1 ? `${selectedItem} hora`:`${selectedItem} horas`
+                            }}
+                            rowTextForSelection={(item, index) => {
+                                return item == 1 ? `${item} hora`: `${item} horas`
+                            }}
+                        />
                         </View>
                     </View>
                     <View style={styles.confirmButton}>
@@ -225,7 +281,7 @@ const textfieldStyle = StyleSheet.create({
     input: {
         borderBottomWidth: 1,
         borderColor: "gray",
-        color: "#000000",
+        color: "#707070",
         width: "100%",
         height: "100%",
         fontSize: 19,

@@ -22,6 +22,7 @@ export default function DeleteAnimation(props: {state:boolean, onAnimationFinish
     return (
         <View style={[styles.animationContainer, props.state == true ? {display: "flex"}: {display: "none"}]}>
             <LottieView
+                speed={2.5}
                 autoPlay={false}
                 ref={animationRef}
                 style={styles.animation}

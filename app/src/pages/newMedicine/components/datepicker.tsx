@@ -1,24 +1,22 @@
 import React, {useState, useEffect} from "react"
 import DateTimePicker from "@react-native-community/datetimepicker"
-import { StyleSheet, Button, Platform, View, TouchableOpacity, Text} from "react-native"
+import { StyleSheet, Button, Platform, View, Pressable, Text} from "react-native"
 
-export default function DatePicker(props: {getData: any, placeholder: string}){
+export default function DatePicker(props: {getData:any, placeholder:string}){
+
+    const [focused, setFocused] = useState(false)
+    const [filled, setFilled] = useState(false)
 
     const [date, setDate]         = useState(new Date())
     const [textDate, setTextDate] = useState(props.placeholder)
     const [show, setShow]         = useState(false)
-
-
-    // useEffect(() => {
-    //     resetData()
-    // },[props.resetData]);
-
 
     function handleDateChange(event: any, selectedDate: any){
         setShow(false)
 
         if (event.type == "set"){
             setDate(selectedDate)
+            setFilled(true)
 
             if (selectedDate.getHours() < 10 && selectedDate.getMinutes() < 10){
                 setTextDate(`0${selectedDate.getHours()}:0${selectedDate.getMinutes()}`)
@@ -32,14 +30,16 @@ export default function DatePicker(props: {getData: any, placeholder: string}){
             else {
                 setTextDate(`${selectedDate.getHours()}:${selectedDate.getMinutes()}`)
             }
-            console.log(selectedDate)
             props.getData(selectedDate)
         }
         if (event.type == "dismissed"){
             setDate(new Date())
             setTextDate(props.placeholder)
+            setFocused(false)
+            setFilled(false)
         }
     }
+
 
     function resetData(){
         setDate(new Date())
@@ -48,15 +48,16 @@ export default function DatePicker(props: {getData: any, placeholder: string}){
 
     function openPicker(){
         setShow(true)
+        setFocused(true)
     }
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button} onPress={openPicker} activeOpacity={0.9999}>
+            <Pressable onPress={openPicker} style={[styles.button, (focused || filled) && {borderColor: "green"}]} >
                 <Text style={styles.buttonText}>
                     {textDate}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
             {
                 show && (
                     <DateTimePicker
@@ -66,7 +67,6 @@ export default function DatePicker(props: {getData: any, placeholder: string}){
                         display="default"
                         onChange={handleDateChange}
                         mode="time"
-                
                     />
                 )
             }
