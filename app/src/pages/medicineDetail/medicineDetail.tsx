@@ -33,10 +33,7 @@ export default function MedicineDetail({ route, navigation }:any) {
         id           : "",
         name         : "medicine",
         usageDays    : 0,
-        usageCount   : 0,
-        useInterval  : 0,
-        lastUsageTime: "N/A",
-        nextUsageTime: "N/A",
+        currentDay   : 0,
         status       : 0
     })
 
@@ -46,10 +43,7 @@ export default function MedicineDetail({ route, navigation }:any) {
                 id: route.params.id,
                 name: route.params.name,
                 usageDays: JSON.parse(route.params.usageDays),
-                usageCount: JSON.parse(route.params.usageCount),
-                useInterval: JSON.parse(route.params.useInterval),
-                lastUsageTime: route.params.lastUsageTime,
-                nextUsageTime: route.params.nextUsageTime,
+                currentDay: JSON.parse(route.params.currentDay),
                 status: JSON.parse(route.params.status)
             }
         )
@@ -67,6 +61,19 @@ export default function MedicineDetail({ route, navigation }:any) {
             return "Atrasado"
         }
     }
+
+    function handleStatusChange(){
+        const updatedMedicine:Medicine = {
+            id: data.id,        
+            name: data.name,
+            usageDays: data.usageDays + 1,
+            currentDay: new Date().getDay(),
+            status: 1
+        }
+        setData(updatedMedicine)
+        database.updateMedicine(updatedMedicine)
+    }
+
 
     function handleDeleteMedicine(id:string){
         database.deleteMedicine(id)
@@ -100,46 +107,27 @@ export default function MedicineDetail({ route, navigation }:any) {
                             {data.name}
                         </Text>
                     </View>
-                    <View style={styles.mainInfoAdvert}/>
+                    <View 
+                        style={[
+                            styles.mainInfoAdvert,
+                            (data.status == 0) && {backgroundColor: "grey"},
+                            (data.status == 1) && {backgroundColor: "green"},
+                            (data.status == 2) && {backgroundColor: "red"},
+                        ]}
+                    />
                 </View>
                 <View style={styles.secondaryInfoContainer}>
-                    <View style={styles.secondaryInfoSub1}>
+                    <View style={styles.usesCounter}>
                         <InfoText 
                             title="Dias de uso" 
                             content={`${data.usageDays}`}
                             aditional="dias"
                         />
-                        <InfoText 
-                            title="Dosagem" 
-                            // content={`${props.data.dose}`}
-                            // aditional={`${props.data.doseCategory}`}
-                            content={"20"}
-                            aditional={"mg"}
-                        />
-                        <InfoText 
-                            title="Horario do uso anterior" 
-                            content={`${data.lastUsageTime}`}
-                            aditional=""
-                        />
                     </View>
-                    <View style={styles.secondaryInfoSub2}>
-                        <InfoText 
-                            title="Quantidade de uso" 
-                            content={`${data.usageCount}`}
-                            aditional="vezes"
-                        />
-                        <InfoText 
-                            title="Intervalo de uso" 
-                            content={`${data.useInterval}`}
-                            aditional="horas"
+                    <View style={styles.usesCalendar}>
 
-                        />
-                        <InfoText 
-                            title="Horario do próximo uso" 
-                            content={`${data.nextUsageTime}`}
-                            aditional=""
-                        />
                     </View>
+                    
                 </View>
                 <View style={styles.takenInformationContainer}>
                     <Text style={styles.takenInformationText}>
@@ -147,7 +135,16 @@ export default function MedicineDetail({ route, navigation }:any) {
                     </Text>
                 </View>
                 <View style={styles.confirmTakenButtonContainer}>
-                    <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => Alert.alert("Simple Button pressed")}>
+                    <TouchableOpacity 
+                        style={[
+                            styles.button, (data.status == 1) && {display: "none"}
+                        ]} 
+                        activeOpacity={0.7} 
+                        onPress={handleStatusChange}
+                        disabled={
+                            (data.status == 1)
+                        }
+                    >
                         <Text style={styles.buttonText}>Tomei</Text>
                     </TouchableOpacity>  
                 </View>
@@ -231,7 +228,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "5%",
         borderRadius: 5,
-        backgroundColor: "green"
+        // backgroundColor: "green"
     },
     mainInfoImageWrapper: {
         display: "flex",
@@ -261,38 +258,30 @@ const styles = StyleSheet.create({
     },
     secondaryInfoContainer: {
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         width: "100%",
-        height: "31%",
+        height: "34%",
 
         // backgroundColor: "pink"
     },
-    secondaryInfoSub1: {
-        display: "flex",
-        flexDirection: "column",
-        width: "50%",
-        height: "100%",
+    usesCounter: {
+        width: "100%",
+        height: "40%",
         justifyContent: "center",
         alignItems: "center",
-
-        // backgroundColor: "red"
+        // backgroundColor: "yellow"
     },
-    secondaryInfoSub2: {
-        display: "flex",
-        flexDirection: "column",
-        width: "50%",
-        height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-
-        // backgroundColor: "brown"
+    usesCalendar: {
+        width: "100%",
+        height: "60%",
+        // backgroundColor: "white"
     },
     takenInformationContainer: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: "18%",
+        height: "15%",
 
         // backgroundColor: "gray"
     },
@@ -326,36 +315,38 @@ const infoTextStyle = StyleSheet.create({
     textContainer: {
         display: "flex",
         flexDirection: "column",
-        width: "90%",
-        height: "25%",
+        width: "40%",
+        height: "100%",
         justifyContent: "center",
         alignItems: "flex-start",
-        marginTop: "2%",
         // backgroundColor: "white",
     },
     textTitleContainer: {
         width: "100%",
-        height: "40%",
+        height: "60%",
         justifyContent: "flex-end",
 
-        // backgroundColor: "yellow"
+        // backgroundColor: "blue"
     },
     textTitle: {
-        fontSize: 15,
-        color: "#adb5bd"
+        fontSize: 25,
+        color: "#adb5bd",
+        textAlign: "center"
     },
     textContentContainer: {
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        height: "60%",
+        height: "40%",
         alignItems: "center",
+        justifyContent: "center",
 
         // backgroundColor: "green"
     },
     textContentData: {
         fontSize: 25,
         marginRight: "5%",
+
     },
     textContentAditional: {
         fontSize: 17,

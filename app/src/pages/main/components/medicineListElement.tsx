@@ -34,11 +34,6 @@ export default function MedicineListElement(props: {data:Medicine, navigation: a
                     {statusParser(props.data.status)}
                 </Text>
             </View>
-            <View style={styles.timeStampWrapper}>
-                <Text style={styles.timeStamp}>
-                    {props.data.nextUsageTime}
-                </Text>
-            </View>
             <View style={styles.visualInfo}>
 
             </View>
@@ -82,7 +77,7 @@ const styles = StyleSheet.create({
     contentWrapper: {
         display: "flex",
         flexDirection: "column",
-        width: "60%",
+        width: "79%",
         height: "100%",
         paddingLeft: "5%",
         justifyContent: "center",
@@ -93,18 +88,6 @@ const styles = StyleSheet.create({
     },
     medicineStatus: {
         fontSize: 15
-    },
-    timeStampWrapper: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        width: "19%",
-        height: "100%",
-        // backgroundColor: "#00ffff"
-        backgroundColor: "#e9ecef"
-    },
-    timeStamp: {
-        fontSize: 22
     },
     visualInfo: {
         display: "flex",

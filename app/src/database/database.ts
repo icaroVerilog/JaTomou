@@ -7,10 +7,7 @@ export default class Database {
             id: uuid.v4().toString(),        
             name: medicine.name,
             usageDays: 0,
-            usageCount: 0, 
-            useInterval: medicine.useInterval,
-            lastUsageTime: "N/A",
-            nextUsageTime: "N/A",
+            currentDay: new Date().getDay(),
             status: 0
         }
 
@@ -32,6 +29,16 @@ export default class Database {
         const data:Array<Medicine> = response ? JSON.parse(response): []
 
         const filteredData = data.filter(objeto => objeto.id !== id);
+        await AsyncStorage.setItem("@medicalApp:medicine", JSON.stringify(filteredData))
+    }
+
+    async updateMedicine(medicine: Medicine){
+        const response = await AsyncStorage.getItem("@medicalApp:medicine")
+        const data:Array<Medicine> = response ? JSON.parse(response): []
+
+        var filteredData = data.filter(objeto => objeto.id !== medicine.id);
+        filteredData = [...filteredData, medicine]
+
         await AsyncStorage.setItem("@medicalApp:medicine", JSON.stringify(filteredData))
     }
 }
