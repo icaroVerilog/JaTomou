@@ -36,12 +36,15 @@ export default function MedicineListElement(props: {data:Medicine, navigation: a
             </View>
             <View style={styles.timeStampWrapper}>
                 <Text style={styles.timeStamp}>
-                    {props.data.nextUsageTime}
+                    {props.data.nextUsageCountdown}
                 </Text>
             </View>
-            <View style={styles.visualInfo}>
-
-            </View>
+            <View style={[
+                styles.visualInfo,
+                (props.data.status == 0) && {backgroundColor: "grey"},
+                (props.data.status == 1) && {backgroundColor: "green"},
+                (props.data.status == 2) && {backgroundColor: "red"},
+            ]}/>
         </Pressable>
     )
 }
@@ -112,7 +115,8 @@ const styles = StyleSheet.create({
         height: "100%",
         borderTopRightRadius: elementBorderRadius,
         borderBottomRightRadius: elementBorderRadius,
-        backgroundColor: "#31cb00"
+        backgroundColor: "green"
+        
     },
     image: {
         width: "100%",

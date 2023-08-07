@@ -22,38 +22,66 @@ import trash     from "../../../assets/icons/general/trash2.png"
 import med1      from "../../../assets/icons/med6.png"
 import DeleteAnimation from "../../components/deleteAnimation"
 
+
+import CalculateCountdown from "../../services/calculateCountdown"
+import CalculateNextUseTime from "../../services/calculateNextUseTime"
+
+const calculateUsageTime = new CalculateNextUseTime()
+const calculateCountdown = new CalculateCountdown()
+const database           = new Database()
+
+
 export default function MedicineDetail({ route, navigation }:any) {
 
-    const database = new Database()
+    const [useToday, setUseToday] = useState<boolean>(true)
 
     const [animationState, setAnimationState] = useState<boolean>(false)
 
-
     const [data, setData] = useState<Medicine>({
-        id           : "",
-        name         : "medicine",
-        usageDays    : 0,
-        usageCount   : 0,
-        useInterval  : 0,
-        lastUsageTime: "N/A",
-        nextUsageTime: "N/A",
-        status       : 0
+        id                : "",
+        name              : "medicine",
+        usageDays         : 0,
+        usageCount        : 0,
+        useInterval       : 0,
+        lastUsageTime     : "N/A",
+        nextUsageTime     : "N/A",
+        nextUsageCountdown: "",
+        status            : 0
     })
 
-    useEffect(() =>{
-        setData(
-            {
-                id: route.params.id,
-                name: route.params.name,
-                usageDays: JSON.parse(route.params.usageDays),
-                usageCount: JSON.parse(route.params.usageCount),
-                useInterval: JSON.parse(route.params.useInterval),
-                lastUsageTime: route.params.lastUsageTime,
-                nextUsageTime: route.params.nextUsageTime,
-                status: JSON.parse(route.params.status)
-            }
-        )
+    useEffect(() => {
+        setData({
+            id: route.params.id,
+            name: route.params.name,
+            usageDays: JSON.parse(route.params.usageDays),
+            usageCount: JSON.parse(route.params.usageCount),
+            useInterval: JSON.parse(route.params.useInterval),
+            lastUsageTime: route.params.lastUsageTime,
+            nextUsageTime: route.params.nextUsageTime,
+            nextUsageCountdown: route.params.nextUsageCountdown,
+            status: JSON.parse(route.params.status)
+        })
+    
+    
+        const parsedNextUseDate = new Date(route.params.nextUsageTime).toLocaleString()
+        const parsedPrevUseDate = new Date(route.params.lastUsageTime).toLocaleString()
+    
+        const [date, time] = parsedNextUseDate.split(" ")
+        const [hours, minutes] = time.split(":")
 
+        const actualDatetime = new Date()
+
+        if (actualDatetime.toLocaleDateString() === date){
+            if (actualDatetime.getHours() > Number(hours)){
+                setUseToday(false)
+            }
+            else {
+                setUseToday(true)
+            }
+        }
+        else {
+            setUseToday(false)
+        }
     },[])
 
     function statusParser(statusCode: number) {
@@ -67,6 +95,54 @@ export default function MedicineDetail({ route, navigation }:any) {
             return "Atrasado"
         }
     }
+
+    function dateParser(rawDate: any){
+        const parsedDate = new Date(rawDate).toLocaleString()
+
+        const [date, time] = parsedDate.split(" ")
+        const [hours, minutes] = time.split(":")
+        const formatedTime = hours + ":" + minutes
+
+        return formatedTime
+    }
+
+    function handleStatusChange(){
+        
+        var nextUsageTime
+
+        if (new Date(data.lastUsageTime).toLocaleString() == new Date(0).toLocaleString()){
+            nextUsageTime = calculateUsageTime.execute(new Date(), data.useInterval)
+        }
+        else {
+            nextUsageTime = calculateUsageTime.execute(new Date(data.lastUsageTime), data.useInterval)
+        }
+
+        const updatedMedicine:Medicine = {
+            id: data.id,        
+            name: data.name,
+            usageDays: 0,
+            usageCount: data.usageCount + 1, 
+            useInterval: data.useInterval,
+            lastUsageTime: new Date(),
+            nextUsageTime: nextUsageTime,
+            nextUsageCountdown: calculateCountdown.execute(new Date(), nextUsageTime),
+            status: 1
+        }
+
+        const nextUseDay = updatedMedicine.nextUsageTime.toLocaleString().split("/")
+        const day        = updatedMedicine.nextUsageTime.toLocaleString().split("/")
+
+        if (nextUseDay != day){
+            setUseToday(false)
+        }
+        else {
+            setUseToday(true)
+        }
+        setData(updatedMedicine)
+        database.updateMedicine(updatedMedicine)
+    }
+
+    /* Visual control functions */
 
     function handleDeleteMedicine(id:string){
         database.deleteMedicine(id)
@@ -100,7 +176,14 @@ export default function MedicineDetail({ route, navigation }:any) {
                             {data.name}
                         </Text>
                     </View>
-                    <View style={styles.mainInfoAdvert}/>
+                    <View 
+                        style={[
+                            styles.mainInfoAdvert,
+                            (data.status == 0) && {backgroundColor: "grey"},
+                            (data.status == 1) && {backgroundColor: "green"},
+                            (data.status == 2) && {backgroundColor: "red"},
+                        ]}
+                    />
                 </View>
                 <View style={styles.secondaryInfoContainer}>
                     <View style={styles.secondaryInfoSub1}>
@@ -118,7 +201,9 @@ export default function MedicineDetail({ route, navigation }:any) {
                         />
                         <InfoText 
                             title="Horario do uso anterior" 
-                            content={`${data.lastUsageTime}`}
+                            content={
+                                new Date(data.lastUsageTime).toLocaleString() == new Date(0).toLocaleString() ? "Não usado" : `${dateParser(data.lastUsageTime)}` 
+                            }
                             aditional=""
                         />
                     </View>
@@ -136,8 +221,8 @@ export default function MedicineDetail({ route, navigation }:any) {
                         />
                         <InfoText 
                             title="Horario do próximo uso" 
-                            content={`${data.nextUsageTime}`}
-                            aditional=""
+                            content={`${dateParser(data.nextUsageTime)}`}
+                            aditional={useToday? "hoje" : "amanha"}
                         />
                     </View>
                 </View>
@@ -147,8 +232,19 @@ export default function MedicineDetail({ route, navigation }:any) {
                     </Text>
                 </View>
                 <View style={styles.confirmTakenButtonContainer}>
-                    <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => Alert.alert("Simple Button pressed")}>
-                        <Text style={styles.buttonText}>Tomei</Text>
+                    <TouchableOpacity 
+                        style={[
+                            styles.button, (data.status == 1) && {display: "none"}
+                        ]} 
+                        activeOpacity={0.7} 
+                        onPress={handleStatusChange}
+                        disabled={
+                            (data.status == 1)
+                        }
+                    >
+                        <Text style={styles.buttonText}>
+                            Tomei
+                        </Text>
                     </TouchableOpacity>  
                 </View>
             </View>
@@ -183,15 +279,12 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
-
-        // backgroundColor: "#fffa00"
     },
     medicineDetailContent: {
         display: "flex", 
         flexDirection: "column",
         width: "94%",
         height: "100%",
-
         backgroundColor: "#F2F2F2"
     },
     returnButtonContainer: {
@@ -201,14 +294,12 @@ const styles = StyleSheet.create({
         height: "10%",
         justifyContent: "space-between",
         alignItems: "center",
-        // backgroundColor: "grey"
     },
     returnButton: {
         width: "15%",
         height: "60%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "yellow"
     },
     returnButtonImage: {
         width: "55%",
@@ -223,15 +314,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
-        
-        // backgroundColor: "blue",
     },
     mainInfoAdvert: {
         display: "flex",
         width: "100%",
         height: "5%",
         borderRadius: 5,
-        backgroundColor: "green"
     },
     mainInfoImageWrapper: {
         display: "flex",
@@ -239,8 +327,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "30%",
         height: "50%",
-
-        // backgroundColor: "green"
     },
     mainInfoImage: {
         width: "80%",
@@ -253,8 +339,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         height: "50%",
-
-        // backgroundColor: "grey"
     },
     mainInfoText: {
         fontSize: 35
@@ -264,8 +348,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "100%",
         height: "31%",
-
-        // backgroundColor: "pink"
     },
     secondaryInfoSub1: {
         display: "flex",
@@ -274,8 +356,6 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         alignItems: "center",
-
-        // backgroundColor: "red"
     },
     secondaryInfoSub2: {
         display: "flex",
@@ -284,8 +364,6 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         alignItems: "center",
-
-        // backgroundColor: "brown"
     },
     takenInformationContainer: {
         display: "flex",
@@ -293,8 +371,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         height: "18%",
-
-        // backgroundColor: "gray"
     },
     takenInformationText: {
         fontSize: 34,
@@ -305,7 +381,6 @@ const styles = StyleSheet.create({
         height: "16%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "blue"
     },
     button: {
         width: "55%",
@@ -331,14 +406,11 @@ const infoTextStyle = StyleSheet.create({
         justifyContent: "center",
         alignItems: "flex-start",
         marginTop: "2%",
-        // backgroundColor: "white",
     },
     textTitleContainer: {
         width: "100%",
         height: "40%",
         justifyContent: "flex-end",
-
-        // backgroundColor: "yellow"
     },
     textTitle: {
         fontSize: 15,
@@ -350,14 +422,13 @@ const infoTextStyle = StyleSheet.create({
         width: "100%",
         height: "60%",
         alignItems: "center",
-
-        // backgroundColor: "green"
     },
     textContentData: {
         fontSize: 25,
         marginRight: "5%",
     },
     textContentAditional: {
+        marginTop: 8,
         fontSize: 17,
     }
 });

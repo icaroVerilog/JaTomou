@@ -5,8 +5,9 @@ export declare global {
         usageDays     : number,
         usageCount    : number,
         useInterval   : number,
-        lastUsageTime : string,
-        nextUsageTime : string,
+        lastUsageTime : Date | string,
+        nextUsageTime : Date | string,
+        nextUsageCountdown: string
         status        : number
     }
 }

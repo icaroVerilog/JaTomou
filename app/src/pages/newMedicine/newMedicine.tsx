@@ -174,23 +174,29 @@ export default function NewMedicine({navigation}: any) {
                             />
                         </View>
                         <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
-                        <SelectDropdown
-                            onBlur={handleUseIntervalFieldBlur}
-                            onFocus={handleUseIntervalFieldFocus}
-                            buttonStyle={[dropdownStyle.button, (focusedUseIntervalField || filledUseIntervalField) && {borderColor: "green"}]}
-                            buttonTextStyle={dropdownStyle.text}
-                            defaultButtonText="Selecione o intervalo de uso"
-                            data={
-                                [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-                            }
-                            onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
-                            buttonTextAfterSelection={(selectedItem) => {
-                                return selectedItem == 1 ? `${selectedItem} hora`:`${selectedItem} horas`
-                            }}
-                            rowTextForSelection={(item, index) => {
-                                return item == 1 ? `${item} hora`: `${item} horas`
-                            }}
-                        />
+                            <SelectDropdown
+                                onBlur={handleUseIntervalFieldBlur}
+                                onFocus={handleUseIntervalFieldFocus}
+                                buttonStyle={[dropdownStyle.button, (focusedUseIntervalField || filledUseIntervalField) && {borderColor: "green"}]}
+                                buttonTextStyle={dropdownStyle.text}
+                                defaultButtonText="Selecione o intervalo de uso"
+                                data={
+                                    [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+                                }
+                                onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
+                                buttonTextAfterSelection={(selectedItem) => {
+                                    return selectedItem == 1 ? `${selectedItem} hora`:`${selectedItem} horas`
+                                }}
+                                rowTextForSelection={(item, index) => {
+                                    return item == 1 ? `${item} hora`: `${item} horas`
+                                }}
+                            />
+                        </View>
+                        <View style={styles.fieldWrapper}>
+                            <DatePicker 
+                                getData={handleUseTimeChange} 
+                                placeholder="Selecione o horário do primeiro uso"
+                            />
                         </View>
                     </View>
                     <View style={styles.confirmButton}>
@@ -268,12 +274,17 @@ const styles = StyleSheet.create({
         marginBottom: "6%",
         // backgroundColor: "gray"
     },
+    checkboxFieldWrapper: {
+        width: "85%",
+        height: "21%",
+        backgroundColor: "gray"
+    },
     confirmButton: {
         width: "100%",
         height: "20%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "yellow"
+        backgroundColor: "yellow"
     }
 })
 
@@ -286,7 +297,7 @@ const textfieldStyle = StyleSheet.create({
         height: "100%",
         fontSize: 19,
         padding: 0,
-        textAlign: "center"
+        textAlign: "center",
     }
 })
 
