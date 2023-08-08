@@ -5,5 +5,6 @@ export declare global {
         usageDays : number,
         currentDay: number,
         status    : number
+        usedDays  : Array<string>
     }
 }

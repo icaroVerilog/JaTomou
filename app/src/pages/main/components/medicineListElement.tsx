@@ -34,9 +34,12 @@ export default function MedicineListElement(props: {data:Medicine, navigation: a
                     {statusParser(props.data.status)}
                 </Text>
             </View>
-            <View style={styles.visualInfo}>
-
-            </View>
+            <View style={[
+                styles.visualInfo,
+                (props.data.status == 0) && {backgroundColor: "grey"},
+                (props.data.status == 1) && {backgroundColor: "green"},
+                (props.data.status == 2) && {backgroundColor: "red"},
+            ]}/>
         </Pressable>
     )
 }
@@ -92,10 +95,10 @@ const styles = StyleSheet.create({
     visualInfo: {
         display: "flex",
         width: "4%",
-        height: "100%",
+        height: "102%",
         borderTopRightRadius: elementBorderRadius,
         borderBottomRightRadius: elementBorderRadius,
-        backgroundColor: "#31cb00"
+        // backgroundColor: "#31cb00"
     },
     image: {
         width: "100%",

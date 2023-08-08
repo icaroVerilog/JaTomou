@@ -18,7 +18,7 @@ import Database from "../../database/database"
 
 
 import leftArrow from "../../../assets/icons/general/back.png"
-import trash     from "../../../assets/icons/general/trash2.png"
+import trash     from "../../../assets/icons/general/trash.png"
 import med1      from "../../../assets/icons/med6.png"
 import DeleteAnimation from "../../components/deleteAnimation"
 
@@ -34,6 +34,7 @@ export default function MedicineDetail({ route, navigation }:any) {
         name         : "medicine",
         usageDays    : 0,
         currentDay   : 0,
+        usedDays     : [],
         status       : 0
     })
 
@@ -44,6 +45,7 @@ export default function MedicineDetail({ route, navigation }:any) {
                 name: route.params.name,
                 usageDays: JSON.parse(route.params.usageDays),
                 currentDay: JSON.parse(route.params.currentDay),
+                usedDays: route.params.usedDays,
                 status: JSON.parse(route.params.status)
             }
         )
@@ -68,7 +70,8 @@ export default function MedicineDetail({ route, navigation }:any) {
             name: data.name,
             usageDays: data.usageDays + 1,
             currentDay: new Date().getDay(),
-            status: 1
+            status: 1,
+            usedDays: [...data.usedDays, new Date().toLocaleDateString()]
         }
         setData(updatedMedicine)
         database.updateMedicine(updatedMedicine)
@@ -121,7 +124,7 @@ export default function MedicineDetail({ route, navigation }:any) {
                         <InfoText 
                             title="Dias de uso" 
                             content={`${data.usageDays}`}
-                            aditional="dias"
+                            aditional={ (data.usageDays == 0 || data.usageDays > 1)? "dias": "dia"}
                         />
                     </View>
                     <View style={styles.usesCalendar}>
@@ -286,7 +289,7 @@ const styles = StyleSheet.create({
         // backgroundColor: "gray"
     },
     takenInformationText: {
-        fontSize: 34,
+        fontSize: 45,
         fontWeight: "bold"
     },
     confirmTakenButtonContainer: {
@@ -344,11 +347,11 @@ const infoTextStyle = StyleSheet.create({
         // backgroundColor: "green"
     },
     textContentData: {
-        fontSize: 25,
+        fontSize: 30,
         marginRight: "5%",
-
     },
     textContentAditional: {
-        fontSize: 17,
+        fontSize: 20,
+        marginTop: "5%",
     }
 });

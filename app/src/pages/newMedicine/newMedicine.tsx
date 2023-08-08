@@ -1,7 +1,7 @@
 import React                        from "react"
 import { useEffect }                from "react"
 import { useState }                 from "react"
-import { Text }                     from "react-native"
+import { KeyboardAvoidingView, Text }                     from "react-native"
 import { View }                     from "react-native"
 import { TextInput }                from "react-native"
 import { TouchableWithoutFeedback } from "react-native"
@@ -11,22 +11,20 @@ import { Image }                    from "react-native"
 import { StyleSheet }               from "react-native"
 import { StatusBar }                from "react-native"
 
-import SelectDropdown               from "react-native-select-dropdown"
-import DatePicker                   from "./components/datepicker"
-
 import Database                     from "../../database/database"
-import leftArrow                    from "../../../assets/icons/general/back.png"
+import rightArrow                   from "../../../assets/icons/general/right-arrow.png"
 import OkAnimation                  from "../../components/okAnimation"
-
 
 
 export default function NewMedicine({navigation}: any) {
 
     const database = new Database()
 
-    const [focusedNameField, setFocusedNameField]                       = useState(false)
-    const [filledNameField, setFilledNameField]                         = useState(false)
+    const [focusedNameField, setFocusedNameField] = useState(false)
+    const [filledNameField, setFilledNameField]   = useState(false)
     const [animationState, setAnimationState] = useState<boolean>(false)
+
+    const [medicineNamePlaceholder, setMedicineNamePlaceholder] = useState<string>("Digite o nome do medicamento")
 
     const [medicine, setMedicine] = useState(
         {
@@ -36,16 +34,13 @@ export default function NewMedicine({navigation}: any) {
             useTime: ""
         }
     )
-    
 
     function handleMedicineNameChange(value: string){
         setMedicine((medicine) => ({...medicine, name: value}))
     }
 
-
     function handleCreateMedicine(){
-        Keyboard.dismiss
-        console.log("foi")
+        Keyboard.dismiss()
         database.persistMedicine(medicine)
         setAnimationState(true)
     }
@@ -54,10 +49,14 @@ export default function NewMedicine({navigation}: any) {
 
     function handleNameFieldFocus(){
         setFocusedNameField(true)
+        setMedicineNamePlaceholder("")
     }
 
     function handleNameFieldBlur(){
         setFocusedNameField(false)
+        if (filledNameField == false){
+            setMedicineNamePlaceholder("Digite o nome do medicamento")
+        }
         setFilledNameField(!!medicine.name)
     }
 
@@ -75,22 +74,24 @@ export default function NewMedicine({navigation}: any) {
                 <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
                         <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                            <Image style={styles.returnButtonImage} source={leftArrow}/>
+                            <Image style={styles.returnButtonImage} source={rightArrow}/>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.instructions}>
                         <Text style={styles.instructionsText}>
-                            Insira os dados do medicamento para que possamos te lembrar no horario correto
+                            Insira o nome do medicamento parque você possa ter o controle do uso
                         </Text>
                     </View>
                     <View style={styles.dataFields}>
                         <View style={styles.fieldWrapper}>
                             <TextInput 
+                                maxLength={25}
+                                selectionColor={"grey"}
                                 style={[
                                     textfieldStyle.input,
                                     (focusedNameField || filledNameField) && {borderColor: "green"},
                                 ]}
-                                placeholder={"Digite o nome do medicamento"} 
+                                placeholder={medicineNamePlaceholder} 
                                 onBlur={handleNameFieldBlur}
                                 onFocus={handleNameFieldFocus}
                                 onChangeText={handleMedicineNameChange}
@@ -99,7 +100,7 @@ export default function NewMedicine({navigation}: any) {
                     </View>
                     <View style={styles.confirmButton}>
                         <TouchableOpacity style={confirmButtomStyle.button} activeOpacity={0.7} onPress={handleCreateMedicine}>
-                            <Text style={confirmButtomStyle.text}>
+                        <Text style={confirmButtomStyle.text}>
                                 Criar
                             </Text>
                         </TouchableOpacity>
@@ -115,7 +116,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        // marginTop: getStatusBarHeight(),
         backgroundColor: "#F2F2F2"
     },
     content: {
@@ -161,10 +161,10 @@ const styles = StyleSheet.create({
         display: "flex",
         width: "100%",
         height: "55%",
-        paddingTop: "10%",
+        paddingTop: "30%",
         justifyContent: "flex-start",
         alignItems: "center",
-        // backgroundColor: "#FF00FF"
+        // backgroundColor: "pink"
     },
     fieldWrapper: {
         width: "85%",

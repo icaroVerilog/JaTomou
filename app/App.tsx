@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar"
-import { StyleSheet, Text, View } from "react-native"
+import React, { useEffect } from "react"
+import { StyleSheet } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 
@@ -8,13 +8,20 @@ import Welcome from "./src/pages/welcome/welcome"
 import Main     from "./src/pages/main/main"
 import NewMedicine from "./src/pages/newMedicine/newMedicine"
 import MedicineDetail from "./src/pages/medicineDetail/medicineDetail"
-import OkAnimation from "./src/components/okAnimation"
 
+import Database from "./src/database/database"
 
 
 const Stack = createNativeStackNavigator()
+const database = new Database()
 
 export default function App() {
+
+    useEffect(() => {
+        // database.updateData()
+    },[])
+
+
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Main">
