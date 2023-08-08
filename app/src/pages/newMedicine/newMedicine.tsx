@@ -15,7 +15,7 @@ import SelectDropdown               from "react-native-select-dropdown"
 import DatePicker                   from "./components/datepicker"
 
 import Database                     from "../../database/database"
-import leftArrow                    from "../../../assets/icons/general/back.png"
+import rightArrow                   from "../../../assets/icons/general/right-arrow.png"
 import OkAnimation                  from "../../components/okAnimation"
 
 
@@ -122,7 +122,7 @@ export default function NewMedicine({navigation}: any) {
                 <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
                         <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                            <Image style={styles.returnButtonImage} source={leftArrow}/>
+                            <Image style={styles.returnButtonImage} source={rightArrow}/>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.instructions}>
@@ -217,7 +217,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        // marginTop: getStatusBarHeight(),
         backgroundColor: "#F2F2F2"
     },
     content: {

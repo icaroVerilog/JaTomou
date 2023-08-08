@@ -18,7 +18,7 @@ import Database from "../../database/database"
 
 
 import leftArrow from "../../../assets/icons/general/back.png"
-import trash     from "../../../assets/icons/general/trash2.png"
+import trash     from "../../../assets/icons/general/trash.png"
 import med1      from "../../../assets/icons/med6.png"
 import DeleteAnimation from "../../components/deleteAnimation"
 
