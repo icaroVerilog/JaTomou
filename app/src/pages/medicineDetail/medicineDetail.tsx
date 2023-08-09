@@ -89,70 +89,72 @@ export default function MedicineDetail({ route, navigation }:any) {
     }
 
     return (
-        <View style={styles.medicineDetail}>
+        <>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
-            <DeleteAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
-            <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
-                <View style={styles.returnButtonContainer}>
-                    <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
-                        <Image style={styles.returnButtonImage} source={trash}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                        <Image style={styles.returnButtonImage} source={leftArrow}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.mainInfoContainer}>
-                    <View style={styles.mainInfoImageWrapper}>
-                        <Image style={styles.mainInfoImage} source={med1}/>
+            <View style={styles.medicineDetail}>
+                <DeleteAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+                <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
+                    <View style={styles.returnButtonContainer}>
+                        <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
+                            <Image style={styles.returnButtonImage} source={trash}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                            <Image style={styles.returnButtonImage} source={leftArrow}/>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.mainInfoTextWrapper}>
-                        <Text style={styles.mainInfoText}>
-                            {data.name}
-                        </Text>
-                    </View>
-                    <View 
-                        style={[
-                            styles.mainInfoAdvert,
-                            (data.status == 0) && {backgroundColor: "grey"},
-                            (data.status == 1) && {backgroundColor: "green"},
-                            (data.status == 2) && {backgroundColor: "red"},
-                        ]}
-                    />
-                </View>
-                <View style={styles.secondaryInfoContainer}>
-                    <View style={styles.usesCounter}>
-                        <InfoText 
-                            title="Dias de uso" 
-                            content={`${data.usageDays}`}
-                            aditional={ (data.usageDays == 0 || data.usageDays > 1)? "dias": "dia"}
+                    <View style={styles.mainInfoContainer}>
+                        <View style={styles.mainInfoImageWrapper}>
+                            <Image style={styles.mainInfoImage} source={med1}/>
+                        </View>
+                        <View style={styles.mainInfoTextWrapper}>
+                            <Text style={styles.mainInfoText}>
+                                {data.name}
+                            </Text>
+                        </View>
+                        <View 
+                            style={[
+                                styles.mainInfoAdvert,
+                                (data.status == 0) && {backgroundColor: "grey"},
+                                (data.status == 1) && {backgroundColor: "green"},
+                                (data.status == 2) && {backgroundColor: "red"},
+                            ]}
                         />
                     </View>
-                    <View style={styles.usesCalendar}>
+                    <View style={styles.secondaryInfoContainer}>
+                        <View style={styles.usesCounter}>
+                            <InfoText 
+                                title="Dias de uso" 
+                                content={`${data.usageDays}`}
+                                aditional={ (data.usageDays == 0 || data.usageDays > 1)? "dias": "dia"}
+                            />
+                        </View>
+                        <View style={styles.usesCalendar}>
 
+                        </View>
+                        
                     </View>
-                    
-                </View>
-                <View style={styles.takenInformationContainer}>
-                    <Text style={styles.takenInformationText}>
-                        {statusParser(data.status)}
-                    </Text>
-                </View>
-                <View style={styles.confirmTakenButtonContainer}>
-                    <TouchableOpacity 
-                        style={[
-                            styles.button, (data.status == 1) && {display: "none"}
-                        ]} 
-                        activeOpacity={0.7} 
-                        onPress={handleStatusChange}
-                        disabled={
-                            (data.status == 1)
-                        }
-                    >
-                        <Text style={styles.buttonText}>Tomei</Text>
-                    </TouchableOpacity>  
+                    <View style={styles.takenInformationContainer}>
+                        <Text style={styles.takenInformationText}>
+                            {statusParser(data.status)}
+                        </Text>
+                    </View>
+                    <View style={styles.confirmTakenButtonContainer}>
+                        <TouchableOpacity 
+                            style={[
+                                styles.button, (data.status == 1) && {display: "none"}
+                            ]} 
+                            activeOpacity={0.7} 
+                            onPress={handleStatusChange}
+                            disabled={
+                                (data.status == 1)
+                            }
+                        >
+                            <Text style={styles.buttonText}>Tomei</Text>
+                        </TouchableOpacity>  
+                    </View>
                 </View>
             </View>
-        </View>
+        </>
     )
 }
 
@@ -183,8 +185,7 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
-
-        // backgroundColor: "#fffa00"
+        marginTop: StatusBar.currentHeight
     },
     medicineDetailContent: {
         display: "flex", 

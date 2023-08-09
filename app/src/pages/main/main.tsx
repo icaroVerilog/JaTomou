@@ -34,37 +34,39 @@ export default function Main({navigation}: any){
 
 
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#000000" />
-            <View style={styles.profile}>
-                <Text style={[styles.profileText, (data.length == 0? {display: "none"}: {display: "flex"})]}>
-                    Olá, não esqueça seus medicamentos
-                </Text>
-                <Text style={[styles.profileText, (data.length == 0? {display: "flex"}: {display: "none"})]}>
-                    Nunca foi tão facil lembrar se você tomou seus medicamentos diários
-                </Text>
-            </View>
-            <View style={styles.medicines}>
-                <View style={styles.newMedicine}>
-                    <TouchableOpacity style={styles.newMedicineButton} onPress={() => navigation.navigate("NewMedicine")}>
-                        <View style={styles.newMedicineButtonTextContainer}>
-                            <Text style={styles.newMedicineButtonText}>
-                                Adicionar lembrete
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
+        <>
+            <StatusBar barStyle="light-content" backgroundColor="#F2F2F2" />
+            <View style={styles.container}>
+                <View style={styles.profile}>
+                    <Text style={[styles.profileText, (data.length == 0? {display: "none"}: {display: "flex"})]}>
+                        Olá, não esqueça seus medicamentos
+                    </Text>
+                    <Text style={[styles.profileText, (data.length == 0? {display: "flex"}: {display: "none"})]}>
+                        Nunca foi tão facil lembrar se você tomou seus medicamentos diários
+                    </Text>
                 </View>
-                <View style={[styles.medicineListPlaceholder, (data.length == 0? {display: "flex"}: {display: "none"})]}>
-                    <Image style={styles.placeholderImage} source={reminder}/>
-                </View> 
-                <FlatList
-                    style={[styles.medicineListScroll, (data.length == 0? {display: "none"}: {display: "flex"})]}
-                    data={data}
-                    renderItem={({item}) => <MedicineListElement data={item} navigation={navigation}/>}
-                    keyExtractor={item => item.id}
-                />
+                <View style={styles.medicines}>
+                    <View style={styles.newMedicine}>
+                        <TouchableOpacity style={styles.newMedicineButton} onPress={() => navigation.navigate("NewMedicine")}>
+                            <View style={styles.newMedicineButtonTextContainer}>
+                                <Text style={styles.newMedicineButtonText}>
+                                    Adicionar lembrete
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.medicineListPlaceholder, (data.length == 0? {display: "flex"}: {display: "none"})]}>
+                        <Image style={styles.placeholderImage} source={reminder}/>
+                    </View> 
+                    <FlatList
+                        style={[styles.medicineListScroll, (data.length == 0? {display: "none"}: {display: "flex"})]}
+                        data={data}
+                        renderItem={({item}) => <MedicineListElement data={item} navigation={navigation}/>}
+                        keyExtractor={item => item.id}
+                    />
+                </View>
             </View>
-        </View>
+        </>
     )
 }
 
@@ -73,7 +75,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#FFFFFF",
+        marginTop: StatusBar.currentHeight,
     },
     profile: {
         width: "100%",

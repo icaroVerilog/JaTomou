@@ -19,7 +19,6 @@ import OkAnimation                  from "../../components/okAnimation"
 
 export default function NewMedicine({navigation}: any) {
 
-    const windowHeight = useWindowDimensions().height
     const database = new Database()
 
     const [focusedNameField, setFocusedNameField] = useState<boolean>(false)
@@ -78,48 +77,50 @@ export default function NewMedicine({navigation}: any) {
 
 
     return (
-        <View style={[styles.container]}>
-            <OkAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+        <>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
-                    <View style={styles.returnButtonContainer}>
-                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                            <Image style={styles.returnButtonImage} source={rightArrow}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.instructions}>
-                        <Text style={styles.instructionsText}>
-                            Insira o nome do medicamento parque você possa ter o controle do uso
-                        </Text>
-                    </View>
-                    <View style={styles.dataFields}>
-                        <View style={styles.fieldWrapper}>
-                            <TextInput 
-                                maxLength={25}
-                                selectionColor={"grey"}
-                                style={[
-                                    textfieldStyle.input,
-                                    (focusedNameField || filledNameField) && {borderColor: "green"},
-                                    (errorNameField) && {borderColor: "red"}
-                                ]}
-                                placeholder={medicineNamePlaceholder} 
-                                onBlur={handleNameFieldBlur}
-                                onFocus={handleNameFieldFocus}
-                                onChangeText={handleMedicineNameChange}
-                            />
+            <View style={[styles.container]}>
+                <OkAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
+                        <View style={styles.returnButtonContainer}>
+                            <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                                <Image style={styles.returnButtonImage} source={rightArrow}/>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.instructions}>
+                            <Text style={styles.instructionsText}>
+                                Insira o nome do medicamento parque você possa ter o controle do uso
+                            </Text>
+                        </View>
+                        <View style={styles.dataFields}>
+                            <View style={styles.fieldWrapper}>
+                                <TextInput 
+                                    maxLength={25}
+                                    selectionColor={"grey"}
+                                    style={[
+                                        textfieldStyle.input,
+                                        (focusedNameField || filledNameField) && {borderColor: "green"},
+                                        (errorNameField) && {borderColor: "red"}
+                                    ]}
+                                    placeholder={medicineNamePlaceholder} 
+                                    onBlur={handleNameFieldBlur}
+                                    onFocus={handleNameFieldFocus}
+                                    onChangeText={handleMedicineNameChange}
+                                />
+                            </View>
+                        </View>
+                        <View style={styles.confirmButton}>
+                            <TouchableOpacity style={confirmButtomStyle.button} activeOpacity={0.7} onPress={handleCreateMedicine}>
+                                <Text style={confirmButtomStyle.text}>
+                                    Criar
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.confirmButton}>
-                        <TouchableOpacity style={confirmButtomStyle.button} activeOpacity={0.7} onPress={handleCreateMedicine}>
-                            <Text style={confirmButtomStyle.text}>
-                                Criar
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </View>
+                </TouchableWithoutFeedback>
+            </View>
+        </>
     )
 }
 
@@ -128,13 +129,15 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#000000"
+        backgroundColor: "#F2F2F2",
+        marginTop: StatusBar.currentHeight,
     },
     content: {
         display: "flex", 
         flexDirection: "column",
         height: "100%",
         width: "94%",
+        marginTop: StatusBar.currentHeight,
         backgroundColor: "#F2F2F2",
     },
     returnButtonContainer: {
@@ -143,7 +146,7 @@ const styles = StyleSheet.create({
         height: "10%",
         justifyContent: "center",
         alignItems: "flex-end",
-        backgroundColor: "grey"
+        // backgroundColor: "grey"
     },
     returnButton: {
         width: "15%",
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
         height: "15%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "blue"
+        // backgroundColor: "blue"
     },
     instructionsText: {
         fontSize: 22,
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
         paddingTop: "30%",
         justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "pink"
+        // backgroundColor: "pink"
     },
     fieldWrapper: {
         width: "85%",
@@ -187,9 +190,9 @@ const styles = StyleSheet.create({
     confirmButton: {
         width: "100%",
         height: "20%",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "yellow"
+        // backgroundColor: "yellow"
     }
 })
 
@@ -206,19 +209,6 @@ const textfieldStyle = StyleSheet.create({
     }
 })
 
-const dropdownStyle = StyleSheet.create({
-    button: {
-        width: "100%",
-        height: "100%",
-        borderBottomWidth: 1,
-        borderColor: "gray",
-        backgroundColor: "transparent"
-    },
-    text: {
-        color: "#707070",
-        fontSize: 19,
-    }
-})
 
 const confirmButtomStyle = StyleSheet.create({
     button: {
@@ -227,10 +217,7 @@ const confirmButtomStyle = StyleSheet.create({
         borderRadius: 30,
         justifyContent: "center",
         alignItems: "center",
-        // marginTop: "4%",
-        // backgroundColor: "#007f5f",
         backgroundColor: "#55a630",
-        // backgroundColor: "#31cb00",
         elevation: 3,
     },
     text: {
