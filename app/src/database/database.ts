@@ -60,4 +60,16 @@ export default class Database {
 
         await AsyncStorage.setItem("@medicalApp2:medicine", JSON.stringify(updatedData))
     }
+
+    async handleFirstUse():Promise<boolean>{
+        const response = await AsyncStorage.getItem("@medicalApp2:userData")
+
+        if (response == null){
+            await AsyncStorage.setItem("@medicalApp2:userData", JSON.stringify(1))
+            return false
+        }
+        else {
+            return true
+        }
+    }
 }

@@ -98,7 +98,7 @@ export default function NewMedicine({navigation}: any) {
                         <View style={styles.dataFields}>
                             <View style={styles.fieldWrapper}>
                                 <TextInput 
-                                    maxLength={25}
+                                    maxLength={18}
                                     selectionColor={"grey"}
                                     style={[
                                         textfieldStyle.input,

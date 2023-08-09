@@ -22,7 +22,7 @@ export default function OkAnimation(props: {state:boolean, onAnimationFinish:any
     return (
         <View style={[styles.animationContainer, props.state == true ? {display: "flex"}: {display: "none"}]}>
             <LottieView
-                speed={1.5}
+                speed={1.2}
                 autoPlay={false}
                 ref={animationRef}
                 style={styles.animation}

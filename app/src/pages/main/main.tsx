@@ -13,7 +13,7 @@ import MedicineListElement from "./components/medicineListElement"
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import reminder from "../../../assets/icons/general/reminder.png"
+import reminder from "../../../assets/icons/general/reminder2.png"
 
 
 
@@ -24,8 +24,8 @@ export default function Main({navigation}: any){
     const [data, setData] = useState<Medicine[]>([])
 
     async function handleFetchData(){
-        const data = await database.retrieveMedicines()
-        setData(data)
+        const medicines = await database.retrieveMedicines()
+        setData(medicines)
     }
 
     useFocusEffect(useCallback(() => {
@@ -39,7 +39,7 @@ export default function Main({navigation}: any){
             <View style={styles.container}>
                 <View style={styles.profile}>
                     <Text style={[styles.profileText, (data.length == 0? {display: "none"}: {display: "flex"})]}>
-                        Olá, existem lembretes que você deve ficar atento
+                        Olá, seus medicamentos estão listados abaixo
                     </Text>
                     <Text style={[styles.profileText, (data.length == 0? {display: "flex"}: {display: "none"})]}>
                         Nunca foi tão facil lembrar se você tomou seus medicamentos diários
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         height: "14%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#FFFFFF"
+        backgroundColor: "#355070"
     },
     newMedicineButton: {
         display: "flex",
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         width: "70%",
         height: "40%",
         resizeMode: "contain",
-        opacity: 0.2,
+        opacity: 0.15,
         marginBottom: "30%"
     },
     medicines: {

@@ -10,7 +10,7 @@ import { useAnimatedValue } from "react-native"
 
 import Database             from "../../database/database"
 
-import leftArrow            from "../../../assets/icons/general/back.png"
+import righArrow            from "../../../assets/icons/general/right-arrow.png"
 import trash                from "../../../assets/icons/general/trash.png"
 import medicine             from "../../../assets/icons/medicine/med3.png"
 import DeleteAnimation      from "../../components/deleteAnimation"
@@ -111,7 +111,7 @@ export default function MedicineDetail({ route, navigation }:any) {
                             <Image style={styles.returnButtonImage} source={trash}/>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                            <Image style={styles.returnButtonImage} source={leftArrow}/>
+                            <Image style={styles.returnButtonImage} source={righArrow}/>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.mainInfoContainer}>

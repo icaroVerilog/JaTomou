@@ -5,29 +5,31 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-// import welcomeImg from "../../../assets/imgs/welcomeImg.png"
+import welcomeImg from "../../../assets/imgs/welcomeImg.png"
 
 export default function Welcome({navigation}: any) {
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#FFFFFF" />
-            <View style={styles.infoContainer}>
-                <View style={styles.infoImageContainer}>
-                    {/* <Image style={styles.infoimage} source={welcomeImg}/> */}
+        <>
+            <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
+            <View style={styles.container}>
+                <View style={styles.infoContainer}>
+                    <View style={styles.infoImageContainer}>
+                        <Image style={styles.infoimage} source={welcomeImg}/>
+                    </View>
+                    <View style={styles.infoTextContainer}>
+                        <Text style={styles.infoText}>
+                            Não se esqueça mais de tomar seus medicamentos diários
+                        </Text>
+                    </View>
                 </View>
-                <View style={styles.infoTextContainer}>
-                    <Text style={styles.infoText}>
-                        Não perca mais os horários para tomar seus medicamentos
-                    </Text>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => navigation.navigate('Main')}>
+                        <Text style={styles.buttonText}>Começar</Text>
+                        {/* <ChevronRight></ChevronRight> */}
+                    </TouchableOpacity>  
                 </View>
             </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => navigation.navigate('Main')}>
-                    <Text style={styles.buttonText}>Começar</Text>
-                    {/* <ChevronRight></ChevronRight> */}
-                </TouchableOpacity>  
-            </View>
-        </View>
+        </>
     )
 }
 
@@ -42,29 +44,29 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         width: "100%",
-        height: "80%",
+        height: "75%",
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#ffafff"
     },
     buttonContainer: {
         width: "100%",
-        height: "20%",
+        height: "25%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#FFFFaa"
+        backgroundColor: "#F2F2F2"
     },
     infoImageContainer: {
         width: "100%",
-        height: "70%",
-        backgroundColor: "#FFAFFF",
+        height: "75%",
+        backgroundColor: "#F2F2F2",
         justifyContent: "center",
         alignContent: "center"
     },
     infoTextContainer: {
         width: "100%",
-        height: "30%",
-        backgroundColor: "#AFFFFF",
+        height: "25%",
+        backgroundColor: "#F2F2F2",
         justifyContent: "center",
         alignItems: "center"
     },
@@ -73,21 +75,17 @@ const styles = StyleSheet.create({
         fontSize: 25
     },
     infoimage: {
-        // flex: 1,
         width: "100%",
         height: "100%",
         resizeMode: 'contain',
     },
     button: {
-        width: "50%",
-        height: "35%",
-        borderRadius: 30,
+        width: "60%",
+        height: "33%",
+        borderRadius: 100,
         justifyContent: "center",
         alignItems: "center",
-        // marginTop: "4%",
-        // backgroundColor: "#007f5f",
         backgroundColor: "#55a630",
-        // backgroundColor: "#31cb00",
         elevation: 3,
     },
     buttonText: {
