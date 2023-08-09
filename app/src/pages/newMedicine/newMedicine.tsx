@@ -1,6 +1,6 @@
 import React                        from "react"
-import { useEffect }                from "react"
 import { useState }                 from "react"
+import { useWindowDimensions }      from "react-native"
 import { Text }                     from "react-native"
 import { View }                     from "react-native"
 import { TextInput }                from "react-native"
@@ -23,6 +23,8 @@ import OkAnimation                  from "../../components/okAnimation"
 export default function NewMedicine({navigation}: any) {
 
     const database = new Database()
+
+    const windowHeight = useWindowDimensions().height
 
     const [focusedNameField, setFocusedNameField]                       = useState(false)
     const [filledNameField, setFilledNameField]                         = useState(false)
@@ -113,102 +115,105 @@ export default function NewMedicine({navigation}: any) {
         navigation.navigate("Main")
     }
 
-
     return (
-        <View style={styles.container}>
+        <>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
-            <OkAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
-                    <View style={styles.returnButtonContainer}>
-                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                            <Image style={styles.returnButtonImage} source={rightArrow}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.instructions}>
-                        <Text style={styles.instructionsText}>
-                            Insira os dados do medicamento para que possamos te lembrar no horario correto
-                        </Text>
-                    </View>
-                    <View style={styles.dataFields}>
-                        <View style={styles.fieldWrapper}>
-                            <TextInput 
-                                style={[
-                                    textfieldStyle.input,
-                                    (focusedNameField || filledNameField) && {borderColor: "green"},
-                                ]}
-                                placeholder={"Digite o nome do medicamento"} 
-                                onBlur={handleNameFieldBlur}
-                                onFocus={handleNameFieldFocus}
-                                onChangeText={handleMedicineNameChange}
-                            />
+            <View style={[styles.container, { minHeight: Math.round(windowHeight) }]}>
+                <OkAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
+                        <View style={styles.returnButtonContainer}>
+                            <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                                <Image style={styles.returnButtonImage} source={rightArrow}/>
+                            </TouchableOpacity>
                         </View>
-                        <View style={styles.fieldWrapper}>
-                            <SelectDropdown
-                                onBlur={handleUseIntervalTypeFieldBlur}
-                                onFocus={handleUseIntervalTypeFieldFocus}
-                                buttonStyle={[
-                                    dropdownStyle.button, 
-                                    (focusedUseIntervalTypeField || filledUseIntervalTypeField) && {borderColor: "green"}
-                                ]}
-                                buttonTextStyle={dropdownStyle.text}
-                                defaultButtonText="Selecione o tipo de uso"
-                                data={
-                                    ["Diário", "Temporário"]
-                                }
-                                onSelect={(selectedItem) => {handleUseIntervalTypeChange(selectedItem)}}
-                                buttonTextAfterSelection={(selectedItem) => {return selectedItem}}
-                                rowTextForSelection={(item, index) => {return item}}
-                            />
-                        </View>
-                        <View style={[styles.fieldWrapper, medicine.useIntervalType == 1 ? {display: "flex"}: {display: "none"}]}>
-                            <DatePicker 
-                                getData={handleUseTimeChange} 
-                                placeholder="Selecione o horário de uso"
-                            />
-                        </View>
-                        <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
-                            <DatePicker 
-                                getData={handleUseTimeChange} 
-                                placeholder="Selecione o horário do primeiro uso"
-                            />
-                        </View>
-                        <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
-                            <SelectDropdown
-                                onBlur={handleUseIntervalFieldBlur}
-                                onFocus={handleUseIntervalFieldFocus}
-                                buttonStyle={[dropdownStyle.button, (focusedUseIntervalField || filledUseIntervalField) && {borderColor: "green"}]}
-                                buttonTextStyle={dropdownStyle.text}
-                                defaultButtonText="Selecione o intervalo de uso"
-                                data={
-                                    [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-                                }
-                                onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
-                                buttonTextAfterSelection={(selectedItem) => {
-                                    return selectedItem == 1 ? `${selectedItem} hora`:`${selectedItem} horas`
-                                }}
-                                rowTextForSelection={(item, index) => {
-                                    return item == 1 ? `${item} hora`: `${item} horas`
-                                }}
-                            />
-                        </View>
-                        <View style={styles.fieldWrapper}>
-                            <DatePicker 
-                                getData={handleUseTimeChange} 
-                                placeholder="Selecione o horário do primeiro uso"
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.confirmButton}>
-                        <TouchableOpacity style={confirmButtomStyle.button} activeOpacity={0.7} onPress={handleCreateMedicine}>
-                            <Text style={confirmButtomStyle.text}>
-                                Criar
+                        <View style={styles.instructions}>
+                            <Text style={styles.instructionsText}>
+                                Insira os dados do medicamento para que possamos te lembrar no horario correto
                             </Text>
-                        </TouchableOpacity>
+                        </View>
+                        <View style={styles.dataFields}>
+                            <View style={styles.fieldWrapper}>
+                                <TextInput 
+                                maxLength={25}
+                                selectionColor={"grey"}
+                                    style={[
+                                        textfieldStyle.input,
+                                        (focusedNameField || filledNameField) && {borderColor: "green"},
+                                    ]}
+                                    placeholder={"Digite o nome do medicamento"} 
+                                    onBlur={handleNameFieldBlur}
+                                    onFocus={handleNameFieldFocus}
+                                    onChangeText={handleMedicineNameChange}
+                                />
+                            </View>
+                            <View style={styles.fieldWrapper}>
+                                <SelectDropdown
+                                    onBlur={handleUseIntervalTypeFieldBlur}
+                                    onFocus={handleUseIntervalTypeFieldFocus}
+                                    buttonStyle={[
+                                        dropdownStyle.button, 
+                                        (focusedUseIntervalTypeField || filledUseIntervalTypeField) && {borderColor: "green"}
+                                    ]}
+                                    buttonTextStyle={dropdownStyle.text}
+                                    defaultButtonText="Selecione o tipo de uso"
+                                    data={
+                                        ["Diário", "Temporário"]
+                                    }
+                                    onSelect={(selectedItem) => {handleUseIntervalTypeChange(selectedItem)}}
+                                    buttonTextAfterSelection={(selectedItem) => {return selectedItem}}
+                                    rowTextForSelection={(item, index) => {return item}}
+                                />
+                            </View>
+                            <View style={[styles.fieldWrapper, medicine.useIntervalType == 1 ? {display: "flex"}: {display: "none"}]}>
+                                <DatePicker 
+                                    getData={handleUseTimeChange} 
+                                    placeholder="Selecione o horário de uso"
+                                />
+                            </View>
+                            <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
+                                <DatePicker 
+                                    getData={handleUseTimeChange} 
+                                    placeholder="Selecione o horário do primeiro uso"
+                                />
+                            </View>
+                            <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
+                                <SelectDropdown
+                                    onBlur={handleUseIntervalFieldBlur}
+                                    onFocus={handleUseIntervalFieldFocus}
+                                    buttonStyle={[dropdownStyle.button, (focusedUseIntervalField || filledUseIntervalField) && {borderColor: "green"}]}
+                                    buttonTextStyle={dropdownStyle.text}
+                                    defaultButtonText="Selecione o intervalo de uso"
+                                    data={
+                                        [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+                                    }
+                                    onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
+                                    buttonTextAfterSelection={(selectedItem) => {
+                                        return selectedItem == 1 ? `${selectedItem} hora`:`${selectedItem} horas`
+                                    }}
+                                    rowTextForSelection={(item, index) => {
+                                        return item == 1 ? `${item} hora`: `${item} horas`
+                                    }}
+                                />
+                            </View>
+                            <View style={styles.fieldWrapper}>
+                                {/* <DatePicker 
+                                    getData={handleUseTimeChange} 
+                                    placeholder="Selecione o horário do primeiro uso"
+                                /> */}
+                            </View>
+                        </View>
+                        <View style={styles.confirmButton}>
+                            <TouchableOpacity style={confirmButtomStyle.button} activeOpacity={0.7} onPress={handleCreateMedicine}>
+                                <Text style={confirmButtomStyle.text}>
+                                    Criar
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </View>
+                </TouchableWithoutFeedback>
+            </View>
+        </>
     )
 }
 

@@ -155,100 +155,102 @@ export default function MedicineDetail({ route, navigation }:any) {
     }
 
     return (
-        <View style={styles.medicineDetail}>
+        <>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
-            <DeleteAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
-            <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
-                <View style={styles.returnButtonContainer}>
-                    <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
-                        <Image style={styles.returnButtonImage} source={trash}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                        <Image style={styles.returnButtonImage} source={leftArrow}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.mainInfoContainer}>
-                    <View style={styles.mainInfoImageWrapper}>
-                        <Image style={styles.mainInfoImage} source={med1}/>
+            <View style={styles.container}>
+                <DeleteAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+                <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
+                    <View style={styles.returnButtonContainer}>
+                        <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
+                            <Image style={styles.returnButtonImage} source={trash}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
+                            <Image style={styles.returnButtonImage} source={leftArrow}/>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.mainInfoTextWrapper}>
-                        <Text style={styles.mainInfoText}>
-                            {data.name}
-                        </Text>
-                    </View>
-                    <View 
-                        style={[
-                            styles.mainInfoAdvert,
-                            (data.status == 0) && {backgroundColor: "grey"},
-                            (data.status == 1) && {backgroundColor: "green"},
-                            (data.status == 2) && {backgroundColor: "red"},
-                        ]}
-                    />
-                </View>
-                <View style={styles.secondaryInfoContainer}>
-                    <View style={styles.secondaryInfoSub1}>
-                        <InfoText 
-                            title="Dias de uso" 
-                            content={`${data.usageDays}`}
-                            aditional="dias"
-                        />
-                        <InfoText 
-                            title="Dosagem" 
-                            // content={`${props.data.dose}`}
-                            // aditional={`${props.data.doseCategory}`}
-                            content={"20"}
-                            aditional={"mg"}
-                        />
-                        <InfoText 
-                            title="Horario do uso anterior" 
-                            content={
-                                new Date(data.lastUsageTime).toLocaleString() == new Date(0).toLocaleString() ? "Não usado" : `${dateParser(data.lastUsageTime)}` 
-                            }
-                            aditional=""
+                    <View style={styles.mainInfoContainer}>
+                        <View style={styles.mainInfoImageWrapper}>
+                            <Image style={styles.mainInfoImage} source={med1}/>
+                        </View>
+                        <View style={styles.mainInfoTextWrapper}>
+                            <Text style={styles.mainInfoText}>
+                                {data.name}
+                            </Text>
+                        </View>
+                        <View 
+                            style={[
+                                styles.mainInfoAdvert,
+                                (data.status == 0) && {backgroundColor: "grey"},
+                                (data.status == 1) && {backgroundColor: "green"},
+                                (data.status == 2) && {backgroundColor: "red"},
+                            ]}
                         />
                     </View>
-                    <View style={styles.secondaryInfoSub2}>
-                        <InfoText 
-                            title="Quantidade de uso" 
-                            content={`${data.usageCount}`}
-                            aditional="vezes"
-                        />
-                        <InfoText 
-                            title="Intervalo de uso" 
-                            content={`${data.useInterval}`}
-                            aditional="horas"
+                    <View style={styles.secondaryInfoContainer}>
+                        <View style={styles.secondaryInfoSub1}>
+                            <InfoText 
+                                title="Dias de uso" 
+                                content={`${data.usageDays}`}
+                                aditional="dias"
+                            />
+                            <InfoText 
+                                title="Dosagem" 
+                                // content={`${props.data.dose}`}
+                                // aditional={`${props.data.doseCategory}`}
+                                content={"20"}
+                                aditional={"mg"}
+                            />
+                            <InfoText 
+                                title="Horario do uso anterior" 
+                                content={
+                                    new Date(data.lastUsageTime).toLocaleString() == new Date(0).toLocaleString() ? "Não usado" : `${dateParser(data.lastUsageTime)}` 
+                                }
+                                aditional=""
+                            />
+                        </View>
+                        <View style={styles.secondaryInfoSub2}>
+                            <InfoText 
+                                title="Quantidade de uso" 
+                                content={`${data.usageCount}`}
+                                aditional="vezes"
+                            />
+                            <InfoText 
+                                title="Intervalo de uso" 
+                                content={`${data.useInterval}`}
+                                aditional="horas"
 
-                        />
-                        <InfoText 
-                            title="Horario do próximo uso" 
-                            content={`${dateParser(data.nextUsageTime)}`}
-                            aditional={useToday? "hoje" : "amanha"}
-                        />
+                            />
+                            <InfoText 
+                                title="Horario do próximo uso" 
+                                content={`${dateParser(data.nextUsageTime)}`}
+                                aditional={useToday? "hoje" : "amanha"}
+                            />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.takenInformationContainer}>
-                    <Text style={styles.takenInformationText}>
-                        {statusParser(data.status)}
-                    </Text>
-                </View>
-                <View style={styles.confirmTakenButtonContainer}>
-                    <TouchableOpacity 
-                        style={[
-                            styles.button, (data.status == 1) && {display: "none"}
-                        ]} 
-                        activeOpacity={0.7} 
-                        onPress={handleStatusChange}
-                        disabled={
-                            (data.status == 1)
-                        }
-                    >
-                        <Text style={styles.buttonText}>
-                            Tomei
+                    <View style={styles.takenInformationContainer}>
+                        <Text style={styles.takenInformationText}>
+                            {statusParser(data.status)}
                         </Text>
-                    </TouchableOpacity>  
+                    </View>
+                    <View style={styles.confirmTakenButtonContainer}>
+                        <TouchableOpacity 
+                            style={[
+                                styles.button, (data.status == 1) && {display: "none"}
+                            ]} 
+                            activeOpacity={0.7} 
+                            onPress={handleStatusChange}
+                            disabled={
+                                (data.status == 1)
+                            }
+                        >
+                            <Text style={styles.buttonText}>
+                                Tomei
+                            </Text>
+                        </TouchableOpacity>  
+                    </View>
                 </View>
             </View>
-        </View>
+        </>
     )
 }
 
@@ -273,7 +275,7 @@ function InfoText(props: { title:string, content:string, aditional:string }) {
 }
 
 const styles = StyleSheet.create({
-    medicineDetail: {
+    container: {
         display: "flex",
         width: "100%",
         height: "100%",
