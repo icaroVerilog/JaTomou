@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, Alert, Pressable } from "react-native"
-import medicine1 from "../../../../assets/icons/med6.png"
+import { StyleSheet, Text, View, Image, Pressable } from "react-native"
+import medicine from "../../../../assets/icons/medicine/med3.png"
 
 
 export default function MedicineListElement(props: {data:Medicine, navigation: any}) {
@@ -23,7 +23,7 @@ export default function MedicineListElement(props: {data:Medicine, navigation: a
         }>
             <View style={styles.imageContainer}>
                 <View style={styles.imageWrapper}>
-                    <Image style={styles.image} source={medicine1}/>
+                    <Image style={styles.image} source={medicine}/>
                 </View>
             </View>
             <View style={styles.contentWrapper}>
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
         display: "flex",
         width: "80%",
         height: "76%",
-        // backgroundColor: "#AAFF22"
     },
     contentWrapper: {
         display: "flex",
@@ -98,7 +97,6 @@ const styles = StyleSheet.create({
         height: "102%",
         borderTopRightRadius: elementBorderRadius,
         borderBottomRightRadius: elementBorderRadius,
-        // backgroundColor: "#31cb00"
     },
     image: {
         width: "100%",

@@ -39,7 +39,7 @@ export default function Main({navigation}: any){
             <View style={styles.container}>
                 <View style={styles.profile}>
                     <Text style={[styles.profileText, (data.length == 0? {display: "none"}: {display: "flex"})]}>
-                        Olá, não esqueça seus medicamentos
+                        Olá, existem lembretes que você deve ficar atento
                     </Text>
                     <Text style={[styles.profileText, (data.length == 0? {display: "flex"}: {display: "none"})]}>
                         Nunca foi tão facil lembrar se você tomou seus medicamentos diários

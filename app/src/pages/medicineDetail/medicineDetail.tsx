@@ -1,33 +1,27 @@
 import React, {useState, useEffect} from "react"
-import { getStatusBarHeight } from "react-native-status-bar-height"
-import { 
-    StyleSheet, 
-    Text, 
-    View, 
-    StatusBarStyle,
-    Image,
-    Alert,
-    Pressable,
-    TouchableOpacity,
-    Platform,
-    NativeModules,
-    StatusBar
-} from "react-native"
+import { StyleSheet }       from "react-native"
+import { Text }             from "react-native"
+import { View }             from "react-native"
+import { Image }            from "react-native"
+import { TouchableOpacity } from "react-native"
+import { StatusBar }        from "react-native"
+import { Animated }         from "react-native"
+import { useAnimatedValue } from "react-native"
 
-import Database from "../../database/database"
+import Database             from "../../database/database"
 
-
-import leftArrow from "../../../assets/icons/general/back.png"
-import trash     from "../../../assets/icons/general/trash.png"
-import med1      from "../../../assets/icons/med6.png"
-import DeleteAnimation from "../../components/deleteAnimation"
+import leftArrow            from "../../../assets/icons/general/back.png"
+import trash                from "../../../assets/icons/general/trash.png"
+import medicine             from "../../../assets/icons/medicine/med3.png"
+import DeleteAnimation      from "../../components/deleteAnimation"
 
 export default function MedicineDetail({ route, navigation }:any) {
 
     const database = new Database()
 
     const [animationState, setAnimationState] = useState<boolean>(false)
-
+    const [backgroundColor] = useState(new Animated.Value(0))
+    const [animationRunning, setAnimationRunning] = useState<boolean>(false)
 
     const [data, setData] = useState<Medicine>({
         id           : "",
@@ -73,26 +67,44 @@ export default function MedicineDetail({ route, navigation }:any) {
             status: 1,
             usedDays: [...data.usedDays, new Date().toLocaleDateString()]
         }
+        startVisualInfoAnimation()
         setData(updatedMedicine)
         database.updateMedicine(updatedMedicine)
     }
 
+    /* Visual transformation methods */
 
     function handleDeleteMedicine(id:string){
         database.deleteMedicine(id)
         setAnimationState(true)
     }
 
-    function handleAnimationEnd(){
+    function handleDeleteAnimationEnd(){
         setAnimationState(false)
         navigation.navigate("Main")
     }
+
+    function startVisualInfoAnimation() {
+        setAnimationRunning(true)
+        Animated.timing(backgroundColor, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: false,
+        }).start(() => {
+            setAnimationRunning(false)
+        });
+    };
+
+    const interpolatedColor = backgroundColor.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['grey', 'green'],
+    });
 
     return (
         <>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
             <View style={styles.medicineDetail}>
-                <DeleteAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+                <DeleteAnimation state={animationState} onAnimationFinish={handleDeleteAnimationEnd}/>
                 <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
                         <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
@@ -104,19 +116,19 @@ export default function MedicineDetail({ route, navigation }:any) {
                     </View>
                     <View style={styles.mainInfoContainer}>
                         <View style={styles.mainInfoImageWrapper}>
-                            <Image style={styles.mainInfoImage} source={med1}/>
+                            <Image style={styles.mainInfoImage} source={medicine}/>
                         </View>
                         <View style={styles.mainInfoTextWrapper}>
                             <Text style={styles.mainInfoText}>
                                 {data.name}
                             </Text>
                         </View>
-                        <View 
+                        <Animated.View 
                             style={[
-                                styles.mainInfoAdvert,
-                                (data.status == 0) && {backgroundColor: "grey"},
-                                (data.status == 1) && {backgroundColor: "green"},
-                                (data.status == 2) && {backgroundColor: "red"},
+                                styles.visualInfo,
+                                { backgroundColor: interpolatedColor },
+                                (data.status == 0 && animationRunning == false) && {backgroundColor: "grey"},
+                                (data.status == 1 && animationRunning == false) && {backgroundColor: "green"},
                             ]}
                         />
                     </View>
@@ -185,14 +197,12 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
-        // marginTop: StatusBar.currentHeight
     },
     medicineDetailContent: {
         display: "flex", 
         flexDirection: "column",
         width: "94%",
         height: "100%",
-
         backgroundColor: "#F2F2F2"
     },
     returnButtonContainer: {
@@ -202,14 +212,12 @@ const styles = StyleSheet.create({
         height: "10%",
         justifyContent: "space-between",
         alignItems: "center",
-        // backgroundColor: "grey"
     },
     returnButton: {
         width: "15%",
         height: "60%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "yellow"
     },
     returnButtonImage: {
         width: "55%",
@@ -224,15 +232,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
-        
-        // backgroundColor: "blue",
     },
-    mainInfoAdvert: {
+    visualInfo: {
         display: "flex",
         width: "100%",
         height: "5%",
         borderRadius: 5,
-        // backgroundColor: "green"
+        backgroundColor: "yellow"
     },
     mainInfoImageWrapper: {
         display: "flex",
@@ -240,8 +246,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "30%",
         height: "50%",
-
-        // backgroundColor: "green"
     },
     mainInfoImage: {
         width: "80%",
@@ -254,8 +258,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         height: "50%",
-
-        // backgroundColor: "grey"
     },
     mainInfoText: {
         fontSize: 35
@@ -265,20 +267,16 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         width: "100%",
         height: "34%",
-
-        // backgroundColor: "pink"
     },
     usesCounter: {
         width: "100%",
         height: "40%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "yellow"
     },
     usesCalendar: {
         width: "100%",
         height: "60%",
-        // backgroundColor: "white"
     },
     takenInformationContainer: {
         display: "flex",
@@ -286,8 +284,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         height: "15%",
-
-        // backgroundColor: "gray"
     },
     takenInformationText: {
         fontSize: 45,
@@ -298,7 +294,6 @@ const styles = StyleSheet.create({
         height: "16%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "blue"
     },
     button: {
         width: "55%",
@@ -323,14 +318,11 @@ const infoTextStyle = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         alignItems: "flex-start",
-        // backgroundColor: "white",
     },
     textTitleContainer: {
         width: "100%",
         height: "60%",
         justifyContent: "flex-end",
-
-        // backgroundColor: "blue"
     },
     textTitle: {
         fontSize: 25,
@@ -344,8 +336,6 @@ const infoTextStyle = StyleSheet.create({
         height: "40%",
         alignItems: "center",
         justifyContent: "center",
-
-        // backgroundColor: "green"
     },
     textContentData: {
         fontSize: 30,

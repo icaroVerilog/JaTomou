@@ -92,7 +92,7 @@ export default function NewMedicine({navigation}: any) {
                         </View>
                         <View style={styles.instructions}>
                             <Text style={styles.instructionsText}>
-                                Insira o nome do medicamento parque você possa ter o controle do uso
+                                Digite o nome do medicamento parque criar um lembrete
                             </Text>
                         </View>
                         <View style={styles.dataFields}>
