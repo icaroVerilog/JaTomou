@@ -35,7 +35,7 @@ export default function Main({navigation}: any){
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#F2F2F2" />
+            <StatusBar barStyle="light-content" backgroundColor="#000000" />
             <View style={styles.profile}>
                 <Text style={[styles.profileText, (data.length == 0? {display: "none"}: {display: "flex"})]}>
                     Olá, não esqueça seus medicamentos

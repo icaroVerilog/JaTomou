@@ -1,7 +1,8 @@
 import React                        from "react"
 import { useEffect }                from "react"
 import { useState }                 from "react"
-import { KeyboardAvoidingView, Text }                     from "react-native"
+import { Text }                     from "react-native"
+import { useWindowDimensions }      from "react-native"
 import { View }                     from "react-native"
 import { TextInput }                from "react-native"
 import { TouchableWithoutFeedback } from "react-native"
@@ -18,11 +19,13 @@ import OkAnimation                  from "../../components/okAnimation"
 
 export default function NewMedicine({navigation}: any) {
 
+    const windowHeight = useWindowDimensions().height
     const database = new Database()
 
-    const [focusedNameField, setFocusedNameField] = useState(false)
-    const [filledNameField, setFilledNameField]   = useState(false)
-    const [animationState, setAnimationState] = useState<boolean>(false)
+    const [focusedNameField, setFocusedNameField] = useState<boolean>(false)
+    const [filledNameField, setFilledNameField]   = useState<boolean>(false)
+    const [errorNameField, setErrorNameField]     = useState<boolean>(false)
+    const [animationState, setAnimationState]     = useState<boolean>(false)
 
     const [medicineNamePlaceholder, setMedicineNamePlaceholder] = useState<string>("Digite o nome do medicamento")
 
@@ -41,14 +44,22 @@ export default function NewMedicine({navigation}: any) {
 
     function handleCreateMedicine(){
         Keyboard.dismiss()
-        database.persistMedicine(medicine)
-        setAnimationState(true)
+
+        if (filledNameField == false){
+            setErrorNameField(true)
+            setMedicineNamePlaceholder("É obrigatório inserir um nome")
+        }
+        else {
+            database.persistMedicine(medicine)
+            setAnimationState(true)
+        }
     }
 
     /* Visual control functions */
 
     function handleNameFieldFocus(){
         setFocusedNameField(true)
+        setErrorNameField(false)
         setMedicineNamePlaceholder("")
     }
 
@@ -67,9 +78,9 @@ export default function NewMedicine({navigation}: any) {
 
 
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
+        <View style={[styles.container]}>
             <OkAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
+            <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
@@ -90,6 +101,7 @@ export default function NewMedicine({navigation}: any) {
                                 style={[
                                     textfieldStyle.input,
                                     (focusedNameField || filledNameField) && {borderColor: "green"},
+                                    (errorNameField) && {borderColor: "red"}
                                 ]}
                                 placeholder={medicineNamePlaceholder} 
                                 onBlur={handleNameFieldBlur}
@@ -100,7 +112,7 @@ export default function NewMedicine({navigation}: any) {
                     </View>
                     <View style={styles.confirmButton}>
                         <TouchableOpacity style={confirmButtomStyle.button} activeOpacity={0.7} onPress={handleCreateMedicine}>
-                        <Text style={confirmButtomStyle.text}>
+                            <Text style={confirmButtomStyle.text}>
                                 Criar
                             </Text>
                         </TouchableOpacity>
@@ -116,7 +128,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#F2F2F2"
+        backgroundColor: "#000000"
     },
     content: {
         display: "flex", 
@@ -131,7 +143,7 @@ const styles = StyleSheet.create({
         height: "10%",
         justifyContent: "center",
         alignItems: "flex-end",
-        // backgroundColor: "grey"
+        backgroundColor: "grey"
     },
     returnButton: {
         width: "15%",
@@ -151,7 +163,7 @@ const styles = StyleSheet.create({
         height: "15%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "blue"
+        backgroundColor: "blue"
     },
     instructionsText: {
         fontSize: 22,
@@ -164,7 +176,7 @@ const styles = StyleSheet.create({
         paddingTop: "30%",
         justifyContent: "flex-start",
         alignItems: "center",
-        // backgroundColor: "pink"
+        backgroundColor: "pink"
     },
     fieldWrapper: {
         width: "85%",
@@ -177,7 +189,7 @@ const styles = StyleSheet.create({
         height: "20%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "yellow"
+        backgroundColor: "yellow"
     }
 })
 
