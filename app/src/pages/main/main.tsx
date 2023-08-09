@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "flex-start",
         backgroundColor: "#FFFFFF",
-        marginTop: StatusBar.currentHeight,
     },
     profile: {
         width: "100%",

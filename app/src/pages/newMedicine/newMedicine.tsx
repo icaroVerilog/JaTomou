@@ -21,6 +21,8 @@ export default function NewMedicine({navigation}: any) {
 
     const database = new Database()
 
+    const windowHeight = useWindowDimensions().height;
+    
     const [focusedNameField, setFocusedNameField] = useState<boolean>(false)
     const [filledNameField, setFilledNameField]   = useState<boolean>(false)
     const [errorNameField, setErrorNameField]     = useState<boolean>(false)
@@ -79,7 +81,7 @@ export default function NewMedicine({navigation}: any) {
     return (
         <>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
-            <View style={[styles.container]}>
+            <View style={[styles.container, { minHeight: Math.round(windowHeight) }]}>
                 <OkAnimation state={animationState} onAnimationFinish={handleAnimationEnd}/>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
@@ -130,7 +132,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#F2F2F2",
-        marginTop: StatusBar.currentHeight,
     },
     content: {
         display: "flex", 

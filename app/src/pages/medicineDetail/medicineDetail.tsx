@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
-        marginTop: StatusBar.currentHeight
+        // marginTop: StatusBar.currentHeight
     },
     medicineDetailContent: {
         display: "flex", 
