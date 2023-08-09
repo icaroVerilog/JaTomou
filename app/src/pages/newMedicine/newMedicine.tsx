@@ -66,7 +66,7 @@ export default function NewMedicine({navigation}: any) {
 
     function handleNameFieldBlur(){
         setFocusedNameField(false)
-        if (filledNameField == false){
+        if (medicine.name == ""){
             setMedicineNamePlaceholder("Digite o nome do medicamento")
         }
         setFilledNameField(!!medicine.name)
@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         height: "100%",
         width: "94%",
-        marginTop: StatusBar.currentHeight,
         backgroundColor: "#F2F2F2",
     },
     returnButtonContainer: {
@@ -147,7 +146,6 @@ const styles = StyleSheet.create({
         height: "10%",
         justifyContent: "center",
         alignItems: "flex-end",
-        // backgroundColor: "grey"
     },
     returnButton: {
         width: "15%",

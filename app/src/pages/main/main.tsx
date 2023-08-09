@@ -47,7 +47,7 @@ export default function Main({navigation}: any){
                 </View>
                 <View style={styles.medicines}>
                     <View style={styles.newMedicine}>
-                        <TouchableOpacity style={styles.newMedicineButton} onPress={() => navigation.navigate("NewMedicine")}>
+                        <TouchableOpacity style={styles.newMedicineButton} onPress={() => navigation.navigate("NewMedicine")} activeOpacity={0.7}>
                             <View style={styles.newMedicineButtonTextContainer}>
                                 <Text style={styles.newMedicineButtonText}>
                                     Adicionar lembrete
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#F2F2F2",
     },
     profile: {
         width: "100%",

@@ -18,7 +18,7 @@ const database = new Database()
 export default function App() {
 
     useEffect(() => {
-        // database.updateData()
+        database.updateData()
     },[])
 
 
