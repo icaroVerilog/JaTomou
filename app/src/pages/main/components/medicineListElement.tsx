@@ -4,7 +4,7 @@ import { View }       from "react-native"
 import { Image }      from "react-native"
 import { Pressable }  from "react-native"
 
-import MedicineImage from "../../../../assets/icons/MedicineImage/med3.png"
+import MedicineImage from "../../../../assets/icons/medicine/med3.png"
 
 
 export default function MedicineListElement(props: {data:Medicine, navigation: any}) {

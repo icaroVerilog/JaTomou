@@ -10,8 +10,8 @@ import { StatusBar }        from "react-native"
 import { Animated }         from "react-native"
 
 import RighArrow            from "../../../assets/icons/general/right-arrow.png"
-import Trash                from "../../../assets/icons/general/Trash.png"
-import Medicine             from "../../../assets/icons/Medicine/med3.png"
+import Trash                from "../../../assets/icons/general/trash.png"
+import Medicine             from "../../../assets/icons/medicine/med3.png"
 import DeleteAnimation      from "../../components/deleteAnimation"
 
 import Database             from "../../database/database"
