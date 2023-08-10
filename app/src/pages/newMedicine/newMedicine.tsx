@@ -13,7 +13,7 @@ import { StyleSheet }               from "react-native"
 import { StatusBar }                from "react-native"
 
 import Database                     from "../../database/database"
-import rightArrow                   from "../../../assets/icons/general/right-arrow.png"
+import RightArrow                   from "../../../assets/icons/general/right-arrow.png"
 import OkAnimation                  from "../../components/okAnimation"
 
 
@@ -87,7 +87,7 @@ export default function NewMedicine({navigation}: any) {
                     <View style={[styles.content, animationState == true ? {display: "none"}: {display: "flex"}]}>
                         <View style={styles.returnButtonContainer}>
                             <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                                <Image style={styles.returnButtonImage} source={rightArrow}/>
+                                <Image style={styles.returnButtonImage} source={RightArrow}/>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.instructions}>
@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
         height: "60%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "yellow"
     },
     returnButtonImage: {
         width: "55%",
@@ -165,7 +164,6 @@ const styles = StyleSheet.create({
         height: "15%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "blue"
     },
     instructionsText: {
         fontSize: 22,
@@ -178,20 +176,17 @@ const styles = StyleSheet.create({
         paddingTop: "30%",
         justifyContent: "flex-start",
         alignItems: "center",
-        // backgroundColor: "pink"
     },
     fieldWrapper: {
         width: "85%",
         height: "13%",
         marginBottom: "6%",
-        // backgroundColor: "gray"
     },
     confirmButton: {
         width: "100%",
         height: "20%",
         justifyContent: "flex-start",
         alignItems: "center",
-        // backgroundColor: "yellow"
     }
 })
 

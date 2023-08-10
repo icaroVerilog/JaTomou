@@ -1,20 +1,19 @@
-import { 
-    StyleSheet, 
-    Text, 
-    View, 
-    Image,
-    TouchableOpacity,
-    FlatList,
-    StatusBar
-} from "react-native";
+import React                from "react"   
+import { useState }         from "react"
+import { useCallback }      from "react"
+import { StyleSheet }       from "react-native"
+import { Text }             from "react-native"
+import { View }             from "react-native" 
+import { Image }            from "react-native"
+import { TouchableOpacity } from "react-native"
+import { FlatList }         from "react-native"
+import { StatusBar }        from "react-native"
+import { useFocusEffect }   from "@react-navigation/native"
 
-import Database from "../../database/database";
-import MedicineListElement from "./components/medicineListElement"
-import { useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import MedicineListElement  from "./components/medicineListElement"
+import Database             from "../../database/database"
 
-import reminder from "../../../assets/icons/general/reminder2.png"
-
+import ReminderImage        from "../../../assets/icons/general/reminder2.png"
 
 
 export default function Main({navigation}: any){
@@ -56,7 +55,7 @@ export default function Main({navigation}: any){
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.medicineListPlaceholder, (data.length == 0? {display: "flex"}: {display: "none"})]}>
-                        <Image style={styles.placeholderImage} source={reminder}/>
+                        <Image style={styles.placeholderImage} source={ReminderImage}/>
                     </View> 
                     <FlatList
                         style={[styles.medicineListScroll, (data.length == 0? {display: "none"}: {display: "flex"})]}

@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from "react"
+import React                from "react"
+import { useState }         from "react"
+import { useEffect }        from "react"
 import { StyleSheet }       from "react-native"
 import { Text }             from "react-native"
 import { View }             from "react-native"
@@ -6,14 +8,14 @@ import { Image }            from "react-native"
 import { TouchableOpacity } from "react-native"
 import { StatusBar }        from "react-native"
 import { Animated }         from "react-native"
-import { useAnimatedValue } from "react-native"
+
+import RighArrow            from "../../../assets/icons/general/right-arrow.png"
+import Trash                from "../../../assets/icons/general/Trash.png"
+import Medicine             from "../../../assets/icons/Medicine/med3.png"
+import DeleteAnimation      from "../../components/deleteAnimation"
 
 import Database             from "../../database/database"
 
-import righArrow            from "../../../assets/icons/general/right-arrow.png"
-import trash                from "../../../assets/icons/general/trash.png"
-import medicine             from "../../../assets/icons/medicine/med3.png"
-import DeleteAnimation      from "../../components/deleteAnimation"
 
 export default function MedicineDetail({ route, navigation }:any) {
 
@@ -25,7 +27,7 @@ export default function MedicineDetail({ route, navigation }:any) {
 
     const [data, setData] = useState<Medicine>({
         id           : "",
-        name         : "medicine",
+        name         : "Medicine",
         usageDays    : 0,
         currentDay   : 0,
         usedDays     : [],
@@ -52,9 +54,6 @@ export default function MedicineDetail({ route, navigation }:any) {
         }
         if (statusCode == 1){
             return "Tomado"
-        }
-        if (statusCode == 2){
-            return "Atrasado"
         }
     }
 
@@ -108,15 +107,15 @@ export default function MedicineDetail({ route, navigation }:any) {
                 <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
                         <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
-                            <Image style={styles.returnButtonImage} source={trash}/>
+                            <Image style={styles.returnButtonImage} source={Trash}/>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
-                            <Image style={styles.returnButtonImage} source={righArrow}/>
+                            <Image style={styles.returnButtonImage} source={RighArrow}/>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.mainInfoContainer}>
                         <View style={styles.mainInfoImageWrapper}>
-                            <Image style={styles.mainInfoImage} source={medicine}/>
+                            <Image style={styles.mainInfoImage} source={Medicine}/>
                         </View>
                         <View style={styles.mainInfoTextWrapper}>
                             <Text style={styles.mainInfoText}>

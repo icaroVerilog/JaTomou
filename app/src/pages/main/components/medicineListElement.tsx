@@ -1,5 +1,10 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native"
-import medicine from "../../../../assets/icons/medicine/med3.png"
+import { StyleSheet } from "react-native"
+import { Text }       from "react-native"
+import { View }       from "react-native"
+import { Image }      from "react-native"
+import { Pressable }  from "react-native"
+
+import MedicineImage from "../../../../assets/icons/MedicineImage/med3.png"
 
 
 export default function MedicineListElement(props: {data:Medicine, navigation: any}) {
@@ -11,9 +16,6 @@ export default function MedicineListElement(props: {data:Medicine, navigation: a
         if (statusCode == 1){
             return "Tomado"
         }
-        if (statusCode == 2){
-            return "Atrasado"
-        }
     }
 
     return (
@@ -23,7 +25,7 @@ export default function MedicineListElement(props: {data:Medicine, navigation: a
         }>
             <View style={styles.imageContainer}>
                 <View style={styles.imageWrapper}>
-                    <Image style={styles.image} source={medicine}/>
+                    <Image style={styles.image} source={MedicineImage}/>
                 </View>
             </View>
             <View style={styles.contentWrapper}>

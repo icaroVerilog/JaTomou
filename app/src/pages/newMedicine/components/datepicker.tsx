@@ -1,6 +1,10 @@
-import React, {useState, useEffect} from "react"
+import React          from "react"
+import {useState}     from "react"
+import { StyleSheet } from "react-native"
+import { View }       from "react-native"
+import { Pressable }  from "react-native"
+import { Text }       from "react-native"
 import DateTimePicker from "@react-native-community/datetimepicker"
-import { StyleSheet, Button, Platform, View, Pressable, Text} from "react-native"
 
 export default function DatePicker(props: {getData:any, placeholder:string}){
 
@@ -38,12 +42,6 @@ export default function DatePicker(props: {getData:any, placeholder:string}){
             setFocused(false)
             setFilled(false)
         }
-    }
-
-
-    function resetData(){
-        setDate(new Date())
-        setTextDate(props.placeholder)
     }
 
     function openPicker(){

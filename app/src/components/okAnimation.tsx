@@ -1,9 +1,12 @@
-import React, { useRef, useEffect, useState} from "react"
-import { View } from "react-native"
+import React          from "react"
+import { useRef }     from "react"
+import { useEffect}   from "react"
+import { useState}    from "react"
+import { View }       from "react-native"
 import { StyleSheet } from "react-native"
-import LottieView from "lottie-react-native"
 
-import animation from "../../assets/animations/okAnimation.json"
+import LottieView     from "lottie-react-native"
+import Animation      from "../../assets/animations/okAnimation.json"
 
 export default function OkAnimation(props: {state:boolean, onAnimationFinish:any}){
 
@@ -25,8 +28,8 @@ export default function OkAnimation(props: {state:boolean, onAnimationFinish:any
                 speed={1.2}
                 autoPlay={false}
                 ref={animationRef}
-                style={styles.animation}
-                source={animation}
+                style={styles.Animation}
+                source={Animation}
                 loop={false}
                 onAnimationFinish={() => {props.onAnimationFinish()}}
             />
@@ -42,7 +45,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    animation: {
+    Animation: {
         width: "50%",
         height: "70%",
         justifyContent: "center",
