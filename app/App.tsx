@@ -24,43 +24,29 @@ export default function App() {
         database.updateData()
         database.handleFirstUse().then((alreadyUsed) => {
             setAlreadyUsed(alreadyUsed)
-            setTimeout(function(){
-            }, 1000);
-            setUpdatedDataComplete(true)
+            setTimeout(() => {
+                setUpdatedDataComplete(true)
+            }, 2000);
         })
     },[])
 
     if (updatedDataComplete == true){
-        if (alreadyUsed == true){
-            return (
-                <NavigationContainer>
-                    <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={"Main"}>
-                        <Stack.Screen name="Main"           component={Main}    options={{animation:"slide_from_bottom"}}/>
-                        <Stack.Screen name="NewMedicine"    component={NewMedicine} options={{animation:"slide_from_bottom"}}/>
-                        <Stack.Screen name="MedicineDetail" component={MedicineDetail} options={{animation:"slide_from_bottom"}}/>
-                    </Stack.Navigator>
-                </NavigationContainer>
-            )
-        }
-        else {
+        return (
             <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={"Welcome"}>
+                <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={ alreadyUsed == true? "Main": "Welcome"}>
                     <Stack.Screen name="Welcome"        component={Welcome} options={{animation:"slide_from_left"}}/>
                     <Stack.Screen name="Main"           component={Main}    options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="NewMedicine"    component={NewMedicine} options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="MedicineDetail" component={MedicineDetail} options={{animation:"slide_from_bottom"}}/>
                 </Stack.Navigator>
             </NavigationContainer>
-        }
+        )
     }
     else {
         return (
             <AppLoading/>
         )
     }
-
-
-    
 }
 
 const styles = StyleSheet.create({
