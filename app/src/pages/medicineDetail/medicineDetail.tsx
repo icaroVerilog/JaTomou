@@ -9,6 +9,8 @@ import { TouchableOpacity } from "react-native"
 import { StatusBar }        from "react-native"
 import { Animated }         from "react-native"
 
+import UseCalendar          from "./components/useCalendar"
+
 import RighArrow            from "../../../assets/icons/general/right-arrow.png"
 import Trash                from "../../../assets/icons/general/trash.png"
 import Medicine             from "../../../assets/icons/medicine/med3.png"
@@ -139,8 +141,15 @@ export default function MedicineDetail({ route, navigation }:any) {
                                 aditional={ (data.usageDays == 0 || data.usageDays > 1)? "dias": "dia"}
                             />
                         </View>
+                        <View style={styles.usesCounter}>
+                            <InfoText 
+                                title="Horario do proximo uso" 
+                                content={`${data.usageDays}`}
+                                aditional={ (data.usageDays == 0 || data.usageDays > 1)? "dias": "dia"}
+                            />
+                        </View>
                         <View style={styles.usesCalendar}>
-
+                            <UseCalendar/>
                         </View>
                         
                     </View>
@@ -211,6 +220,7 @@ const styles = StyleSheet.create({
         height: "10%",
         justifyContent: "space-between",
         alignItems: "center",
+        // backgroundColor: "blue"
     },
     returnButton: {
         width: "15%",
@@ -226,18 +236,19 @@ const styles = StyleSheet.create({
     mainInfoContainer: {
         display: "flex",
         flexDirection: "column",
-        height: "25%",
+        height: "22%",
         width: "100%",
         alignItems: "center",
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
+        // backgroundColor: "yellow"
     },
     visualInfo: {
         display: "flex",
         width: "100%",
         height: "5%",
         borderRadius: 5,
-        backgroundColor: "yellow"
+        // backgroundColor: "yellow"
     },
     mainInfoImageWrapper: {
         display: "flex",
@@ -245,10 +256,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "30%",
         height: "50%",
+        // backgroundColor: "white"
     },
     mainInfoImage: {
-        width: "80%",
-        height: "80%",
+        width: "90%",
+        height: "90%",
         resizeMode: "contain",
     },
     mainInfoTextWrapper: {
@@ -256,43 +268,48 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: "50%",
+        height: "45%",
+        // backgroundColor: "pink"
     },
     mainInfoText: {
-        fontSize: 35
+        fontSize: 40
     },
     secondaryInfoContainer: {
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        height: "34%",
+        height: "42%",
+        alignItems: "center",
+        backgroundColor: "#F2F2F2"
     },
     usesCounter: {
+        display: "flex",
         width: "100%",
-        height: "40%",
+        height: "25%",
         justifyContent: "center",
         alignItems: "center",
     },
     usesCalendar: {
         width: "100%",
-        height: "60%",
+        height: "35%",
     },
     takenInformationContainer: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: "15%",
+        height: "10%",
     },
     takenInformationText: {
         fontSize: 45,
-        fontWeight: "bold"
+        fontWeight: "bold",
     },
     confirmTakenButtonContainer: {
         width: "100%",
         height: "16%",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "green"
     },
     button: {
         width: "55%",
@@ -302,6 +319,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#55a630",
         elevation: 3,
+        marginBottom: "6%"
     },
     buttonText: {
         color: "#FFFFFF",
@@ -313,18 +331,18 @@ const infoTextStyle = StyleSheet.create({
     textContainer: {
         display: "flex",
         flexDirection: "column",
-        width: "40%",
+        width: "100%",
         height: "100%",
         justifyContent: "center",
-        alignItems: "flex-start",
+        alignItems: "center",
     },
     textTitleContainer: {
         width: "100%",
-        height: "60%",
-        justifyContent: "flex-end",
+        height: "55%",
+        justifyContent: "center",
     },
     textTitle: {
-        fontSize: 25,
+        fontSize: 24,
         color: "#adb5bd",
         textAlign: "center"
     },
@@ -332,16 +350,16 @@ const infoTextStyle = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        height: "40%",
+        height: "45%",
         alignItems: "center",
         justifyContent: "center",
     },
     textContentData: {
         fontSize: 30,
-        marginRight: "5%",
+        marginRight: "3%",
     },
     textContentAditional: {
-        fontSize: 20,
-        marginTop: "5%",
+        fontSize: 25,
+        marginTop: "1%",
     }
 });

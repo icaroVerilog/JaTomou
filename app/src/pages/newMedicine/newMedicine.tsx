@@ -11,6 +11,8 @@ import { TouchableOpacity }         from "react-native"
 import { Image }                    from "react-native"
 import { StyleSheet }               from "react-native"
 import { StatusBar }                from "react-native"
+import SelectDropdown               from "react-native-select-dropdown"
+import DatePicker                   from "./components/datepicker"
 
 import Database                     from "../../database/database"
 import RightArrow                   from "../../../assets/icons/general/right-arrow.png"
@@ -25,6 +27,10 @@ export default function NewMedicine({navigation}: any) {
     
     const [focusedNameField, setFocusedNameField] = useState<boolean>(false)
     const [filledNameField, setFilledNameField]   = useState<boolean>(false)
+    const [focusedUseIntervalTypeField, setFocusedUseIntervalTypeField] = useState(false)
+    const [filledUseIntervalTypeField, setFilledUseIntervalTypeField]   = useState(false)
+    const [focusedUseIntervalField, setFocusedUseIntervalField]         = useState(false)
+    const [filledUseIntervalField, setFilledUseIntervalField]           = useState(false)
     const [errorNameField, setErrorNameField]     = useState<boolean>(false)
     const [animationState, setAnimationState]     = useState<boolean>(false)
 
@@ -39,9 +45,37 @@ export default function NewMedicine({navigation}: any) {
         }
     )
 
+        /* BUG: QUANDO SE INSERE O PRIMEIRO CARACTERE, A FUNÇÃO ABAIXO NAO ATUALIZA MEDICINE */
+
     function handleMedicineNameChange(value: string){
+        console.log(value)
         setMedicine((medicine) => ({...medicine, name: value}))
+        console.log(medicine)
     }
+
+    function handleUseIntervalTypeChange(value: string){
+        console.log(medicine)
+        if (value === "Diário") {
+            setFilledUseIntervalTypeField(true)
+            setMedicine((medicine) => ({...medicine, useIntervalType: 1, useInterval: 24}))
+        }
+        if (value === "Temporário") {
+            setFilledUseIntervalTypeField(true)
+            setMedicine((medicine) => ({...medicine, useIntervalType: 2}))  
+        }
+    }
+
+    function handleUseIntervalChange(value: number){
+        console.log(medicine)
+        setMedicine((medicine) => ({...medicine, useInterval: value}))   
+        setFilledUseIntervalField(true)
+    }
+
+    function handleUseTimeChange(value: string){
+        console.log(medicine)
+        setMedicine((medicine) => ({...medicine, useTime: value}))   
+    }
+
 
     function handleCreateMedicine(){
         Keyboard.dismiss()
@@ -70,6 +104,24 @@ export default function NewMedicine({navigation}: any) {
             setMedicineNamePlaceholder("Digite o nome do medicamento")
         }
         setFilledNameField(!!medicine.name)
+    }
+
+    function handleUseIntervalTypeFieldFocus(){
+        setFocusedUseIntervalTypeField(true)
+    }
+
+    function handleUseIntervalTypeFieldBlur(){
+        setFocusedUseIntervalTypeField(false)
+        setFilledUseIntervalTypeField(!!medicine.useIntervalType)
+    }
+
+    function handleUseIntervalFieldFocus(){
+        setFocusedUseIntervalField(true)
+    }
+
+    function handleUseIntervalFieldBlur(){
+        setFocusedUseIntervalField(false)
+        setFilledUseIntervalField(!!medicine.useInterval)
     }
 
     function handleAnimationEnd(){
@@ -108,7 +160,57 @@ export default function NewMedicine({navigation}: any) {
                                     placeholder={medicineNamePlaceholder} 
                                     onBlur={handleNameFieldBlur}
                                     onFocus={handleNameFieldFocus}
-                                    onChangeText={handleMedicineNameChange}
+                                    
+                                    onChangeText={(value) => {handleMedicineNameChange(value)}}
+                                />
+                            </View>
+                             <View style={styles.fieldWrapper}>
+                                <SelectDropdown
+                                    onBlur={handleUseIntervalTypeFieldBlur}
+                                    onFocus={handleUseIntervalTypeFieldFocus}
+                                    buttonStyle={[
+                                        dropdownStyle.button, 
+                                        (focusedUseIntervalTypeField || filledUseIntervalTypeField) && {borderColor: "green"}
+                                    ]}
+                                    buttonTextStyle={dropdownStyle.text}
+                                    defaultButtonText="Selecione o tipo de uso"
+                                    data={
+                                        ["Diário", "Temporário"]
+                                    }
+                                    onSelect={(selectedItem) => {handleUseIntervalTypeChange(selectedItem)}}
+                                    buttonTextAfterSelection={(selectedItem) => {return selectedItem}}
+                                    rowTextForSelection={(item, index) => {return item}}
+                                />
+                            </View>
+                            <View style={[styles.fieldWrapper, medicine.useIntervalType == 1 ? {display: "flex"}: {display: "none"}]}>
+                                <DatePicker 
+                                    getData={handleUseTimeChange} 
+                                    placeholder="Selecione o horário de uso"
+                                />
+                            </View>
+                            <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
+                                <DatePicker 
+                                    getData={handleUseTimeChange} 
+                                    placeholder="Selecione o horário do primeiro uso"
+                                />
+                            </View>
+                            <View style={[styles.fieldWrapper, medicine.useIntervalType == 2 ? {display: "flex"}: {display: "none"}]}>
+                                <SelectDropdown
+                                    onBlur={handleUseIntervalFieldBlur}
+                                    onFocus={handleUseIntervalFieldFocus}
+                                    buttonStyle={[dropdownStyle.button, (focusedUseIntervalField || filledUseIntervalField) && {borderColor: "green"}]}
+                                    buttonTextStyle={dropdownStyle.text}
+                                    defaultButtonText="Selecione o intervalo de uso"
+                                    data={
+                                        [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+                                    }
+                                    onSelect={(selectedItem) => {handleUseIntervalChange(selectedItem)}}
+                                    buttonTextAfterSelection={(selectedItem) => {
+                                        return selectedItem == 1 ? `${selectedItem} hora`:`${selectedItem} horas`
+                                    }}
+                                    rowTextForSelection={(item, index) => {
+                                        return item == 1 ? `${item} hora`: `${item} horas`
+                                    }}
                                 />
                             </View>
                         </View>
@@ -164,6 +266,7 @@ const styles = StyleSheet.create({
         height: "15%",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "red"
     },
     instructionsText: {
         fontSize: 22,
@@ -173,20 +276,23 @@ const styles = StyleSheet.create({
         display: "flex",
         width: "100%",
         height: "55%",
-        paddingTop: "30%",
+        paddingTop: "15%",
         justifyContent: "flex-start",
         alignItems: "center",
+        // backgroundColor: "pink"
     },
     fieldWrapper: {
         width: "85%",
         height: "13%",
-        marginBottom: "6%",
+        marginBottom: "8%",
+        // backgroundColor: "grey"
     },
     confirmButton: {
         width: "100%",
         height: "20%",
         justifyContent: "flex-start",
         alignItems: "center",
+        backgroundColor: "yellow"
     }
 })
 
@@ -203,6 +309,19 @@ const textfieldStyle = StyleSheet.create({
     }
 })
 
+const dropdownStyle = StyleSheet.create({
+    button: {
+        width: "100%",
+        height: "100%",
+        borderBottomWidth: 1,
+        borderColor: "gray",
+        backgroundColor: "transparent"
+    },
+    text: {
+        color: "#707070",
+        fontSize: 19,
+    }
+})
 
 const confirmButtomStyle = StyleSheet.create({
     button: {
