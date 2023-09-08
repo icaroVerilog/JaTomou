@@ -9,7 +9,8 @@ export default class Database {
             usageDays: 0,
             currentDay: new Date().getDay(),
             status: 0,
-            usedDays: []
+            usedDays: [],
+            useControl: []
         }
 
         const response = await AsyncStorage.getItem("@medicalApp2:medicine")

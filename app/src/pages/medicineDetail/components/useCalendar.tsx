@@ -1,9 +1,38 @@
 import React          from "react"
+import { useState }   from "react"
+import { useEffect }  from "react"
 import { StyleSheet } from "react-native"
 import { View }       from "react-native"
 import { Text }       from "react-native"
 
-export default function UseCalendar(){
+/* Refatorar para incluir o tipo certo certa */
+export default function UseCalendar(props: { data: Medicine }){
+
+    const [weekData, setWeekData] = useState<string[]>([
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFFFFF"
+    ])
+    
+    useEffect(() =>{
+        console.log(props.data)
+        console.log("carregou calendario")
+        const medicineUseData = props.data
+        console.log(medicineUseData.useControl.length)
+        for (let index = medicineUseData.useControl.length - 1; index >= 0; index--) {
+            console.log(medicineUseData.useControl[index])
+            
+        }
+        console.log("a")
+        var updatedWeekData = weekData
+                
+        
+        setWeekData(updatedWeekData)
+    },[props.data])
 
     return (
         <View style={calendar.container}>
@@ -12,24 +41,30 @@ export default function UseCalendar(){
                     <Text style={calendar.title}>Calendário</Text>
                 </View>
                 <View style={calendar.days}>
-                    <WeekDay day="DOM"/>
-                    <WeekDay day="SEG"/>
-                    <WeekDay day="TER"/>
-                    <WeekDay day="QUA"/>
-                    <WeekDay day="QUI"/>
-                    <WeekDay day="SEX"/>
-                    <WeekDay day="SAB"/>
+                    <View style={[weekDay.container]}>
+                        <Text>SEG</Text>
+                    </View>
+                    <View style={[weekDay.container]}>
+                        <Text>TER</Text>
+                    </View>
+                    <View style={[weekDay.container]}>
+                        <Text>QUA</Text>
+                    </View>
+                    <View style={[weekDay.container]}>
+                        <Text>QUI</Text>
+                    </View>
+                    <View style={[weekDay.container]}>
+                        <Text>SEX</Text>
+                    </View>
+                    <View style={[weekDay.container]}>
+                        <Text>SAB</Text>
+                    </View>
+                    <View style={[weekDay.container]}>
+                        <Text>DOM</Text>
+                    </View>
                 </View>
             </View>
         </View>   
-    )
-}
-
-function WeekDay(props: { day:string }){
-    return (
-        <View style={weekDay.container}>
-            <Text>{props.day}</Text>
-        </View>
     )
 }
 

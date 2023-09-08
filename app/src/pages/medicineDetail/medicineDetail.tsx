@@ -26,28 +26,30 @@ export default function MedicineDetail({ route, navigation }:any) {
     const [animationState, setAnimationState] = useState<boolean>(false)
     const [backgroundColor] = useState(new Animated.Value(0))
     const [animationRunning, setAnimationRunning] = useState<boolean>(false)
+    const [loaded, setLoaded] = useState<boolean>(false)
 
-    const [data, setData] = useState<Medicine>({
+    const [medicineData, setMedicineData] = useState<Medicine>({
         id           : "",
         name         : "Medicine",
         usageDays    : 0,
         currentDay   : 0,
-        usedDays     : [],
-        status       : 0
+        status       : 0,
+        useControl   : []
     })
 
     useEffect(() =>{
-        setData(
+        setMedicineData(
             {
                 id: route.params.id,
                 name: route.params.name,
                 usageDays: JSON.parse(route.params.usageDays),
                 currentDay: JSON.parse(route.params.currentDay),
-                usedDays: route.params.usedDays,
-                status: JSON.parse(route.params.status)
+                status: JSON.parse(route.params.status),
+                useControl: route.params.useControl
             }
         )
-
+        setLoaded(true)
+        console.log("carregou main")
     },[])
 
     function statusParser(statusCode: number) {
@@ -60,16 +62,27 @@ export default function MedicineDetail({ route, navigation }:any) {
     }
 
     function handleStatusChange(){
+
+        const currentDate = new Date()
+
+        const useControl:UseControlData = {
+            dayOfWeek: currentDate.getDay(),
+            date: currentDate.toLocaleDateString(),
+            useTime: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
+            status: 1
+        }
+
         const updatedMedicine:Medicine = {
-            id: data.id,        
-            name: data.name,
-            usageDays: data.usageDays + 1,
+            id: medicineData.id,        
+            name: medicineData.name,
+            usageDays: medicineData.usageDays + 1,
             currentDay: new Date().getDay(),
             status: 1,
-            usedDays: [...data.usedDays, new Date().toLocaleDateString()]
+            useControl: [...medicineData.useControl, useControl]
         }
+
         startVisualInfoAnimation()
-        setData(updatedMedicine)
+        setMedicineData(updatedMedicine)
         database.updateMedicine(updatedMedicine)
     }
 
@@ -108,7 +121,7 @@ export default function MedicineDetail({ route, navigation }:any) {
                 <DeleteAnimation state={animationState} onAnimationFinish={handleDeleteAnimationEnd}/>
                 <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
-                        <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(data.id)}>
+                        <TouchableOpacity style={styles.returnButton} onPress={() => handleDeleteMedicine(medicineData.id)}>
                             <Image style={styles.returnButtonImage} source={Trash}/>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.returnButton} onPress={() => navigation.navigate("Main")}>
@@ -121,15 +134,15 @@ export default function MedicineDetail({ route, navigation }:any) {
                         </View>
                         <View style={styles.mainInfoTextWrapper}>
                             <Text style={styles.mainInfoText}>
-                                {data.name}
+                                {medicineData.name}
                             </Text>
                         </View>
                         <Animated.View 
                             style={[
                                 styles.visualInfo,
                                 { backgroundColor: interpolatedColor },
-                                (data.status == 0 && animationRunning == false) && {backgroundColor: "grey"},
-                                (data.status == 1 && animationRunning == false) && {backgroundColor: "green"},
+                                (medicineData.status == 0 && animationRunning == false) && {backgroundColor: "grey"},
+                                (medicineData.status == 1 && animationRunning == false) && {backgroundColor: "green"},
                             ]}
                         />
                     </View>
@@ -137,36 +150,36 @@ export default function MedicineDetail({ route, navigation }:any) {
                         <View style={styles.usesCounter}>
                             <InfoText 
                                 title="Dias de uso" 
-                                content={`${data.usageDays}`}
-                                aditional={ (data.usageDays == 0 || data.usageDays > 1)? "dias": "dia"}
+                                content={`${medicineData.usageDays}`}
+                                aditional={ (medicineData.usageDays == 0 || medicineData.usageDays > 1)? "dias": "dia"}
                             />
                         </View>
                         <View style={styles.usesCounter}>
                             <InfoText 
                                 title="Horario do proximo uso" 
-                                content={`${data.usageDays}`}
-                                aditional={ (data.usageDays == 0 || data.usageDays > 1)? "dias": "dia"}
+                                content={`${medicineData.usageDays}`}
+                                aditional={ (medicineData.usageDays == 0 || medicineData.usageDays > 1)? "dias": "dia"}
                             />
                         </View>
                         <View style={styles.usesCalendar}>
-                            <UseCalendar/>
+                            {loaded && <UseCalendar data={medicineData}/>}
                         </View>
                         
                     </View>
                     <View style={styles.takenInformationContainer}>
                         <Text style={styles.takenInformationText}>
-                            {statusParser(data.status)}
+                            {statusParser(medicineData.status)}
                         </Text>
                     </View>
                     <View style={styles.confirmTakenButtonContainer}>
                         <TouchableOpacity 
                             style={[
-                                styles.button, (data.status == 1) && {display: "none"}
+                                styles.button, (medicineData.status == 1) && {display: "none"}
                             ]} 
                             activeOpacity={0.7} 
                             onPress={handleStatusChange}
                             disabled={
-                                (data.status == 1)
+                                (medicineData.status == 1)
                             }
                         >
                             <Text style={styles.buttonText}>Tomei</Text>
