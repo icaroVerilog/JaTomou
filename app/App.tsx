@@ -7,6 +7,7 @@ import Welcome        from "./src/pages/welcome/welcome"
 import Main           from "./src/pages/main/main"
 import NewMedicine    from "./src/pages/newMedicine/newMedicine"
 import MedicineDetail from "./src/pages/medicineDetail/medicineDetail"
+import UsageDayDetail from "./src/pages/usageDayDetail/usageDayDetail"
 
 import Database from "./src/database/database"
 
@@ -37,6 +38,7 @@ export default function App() {
                     <Stack.Screen name="Main"           component={Main}    options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="NewMedicine"    component={NewMedicine} options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="MedicineDetail" component={MedicineDetail} options={{animation:"slide_from_bottom"}}/>
+                    <Stack.Screen name="UsageDayDetail" component={UsageDayDetail} options={{animation:"slide_from_bottom"}}/>
                 </Stack.Navigator>
             </NavigationContainer>
         )

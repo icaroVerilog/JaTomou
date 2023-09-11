@@ -9,7 +9,7 @@ import { TouchableOpacity } from "react-native"
 import { StatusBar }        from "react-native"
 import { Animated }         from "react-native"
 
-import UseCalendar          from "./components/useCalendar"
+import UseCalendar          from "./components/useScheduler"
 
 import RighArrow            from "../../../assets/icons/general/right-arrow.png"
 import Trash                from "../../../assets/icons/general/trash.png"
@@ -49,7 +49,6 @@ export default function MedicineDetail({ route, navigation }:any) {
             }
         )
         setLoaded(true)
-        console.log("carregou main")
     },[])
 
     function statusParser(statusCode: number) {
@@ -63,27 +62,50 @@ export default function MedicineDetail({ route, navigation }:any) {
 
     function handleStatusChange(){
 
+        const lastUsedData = medicineData.useControl[medicineData.useControl.length - 1]
         const currentDate = new Date()
 
-        const useControl:UseControlData = {
-            dayOfWeek: currentDate.getDay(),
-            date: currentDate.toLocaleDateString(),
-            useTime: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
+        if (medicineData.useControl.length == 1){
+            const useControl:UseControlData = {
+                dayOfWeek: currentDate.getDay(),
+                date:      currentDate.toLocaleDateString(),
+                useTime:   `${currentDate.getHours()}:${currentDate.getMinutes()}`,
+                status:    1
+            }
+
+            const updatedMedicine:Medicine = {
+                id: medicineData.id,        
+                name: medicineData.name,
+                usageDays: medicineData.usageDays + 1,
+                currentDay: new Date().getDay(),
+                status: 1,
+                useControl: [useControl]
+            }
+    
+            setMedicineData(updatedMedicine)
+            database.updateMedicine(updatedMedicine)
+        }
+        else {
+            const useControl:UseControlData = {
+            dayOfWeek: lastUsedData.dayOfWeek,
+            date: lastUsedData.date,
+            useTime: lastUsedData.useTime,
             status: 1
-        }
+            }
 
-        const updatedMedicine:Medicine = {
-            id: medicineData.id,        
-            name: medicineData.name,
-            usageDays: medicineData.usageDays + 1,
-            currentDay: new Date().getDay(),
-            status: 1,
-            useControl: [...medicineData.useControl, useControl]
-        }
 
+            const updatedMedicine:Medicine = {
+                id: medicineData.id,        
+                name: medicineData.name,
+                usageDays: medicineData.usageDays + 1,
+                currentDay: new Date().getDay(),
+                status: 1,
+                useControl: [...medicineData.useControl, useControl]
+            }
+            setMedicineData(updatedMedicine)
+            database.updateMedicine(updatedMedicine)
+        }
         startVisualInfoAnimation()
-        setMedicineData(updatedMedicine)
-        database.updateMedicine(updatedMedicine)
     }
 
     /* Visual transformation methods */
@@ -117,7 +139,7 @@ export default function MedicineDetail({ route, navigation }:any) {
     return (
         <>
             <StatusBar barStyle="dark-content" backgroundColor="#F2F2F2" />
-            <View style={styles.medicineDetail}>
+            <View style={styles.container}>
                 <DeleteAnimation state={animationState} onAnimationFinish={handleDeleteAnimationEnd}/>
                 <View style={[styles.medicineDetailContent, animationState == true ? {display: "none"}: {display: "flex"}]}>
                     <View style={styles.returnButtonContainer}>
@@ -147,7 +169,7 @@ export default function MedicineDetail({ route, navigation }:any) {
                         />
                     </View>
                     <View style={styles.secondaryInfoContainer}>
-                        <View style={styles.usesCounter}>
+                        <View style={[styles.usesCounter, {marginTop: "3%"}]}>
                             <InfoText 
                                 title="Dias de uso" 
                                 content={`${medicineData.usageDays}`}
@@ -162,9 +184,8 @@ export default function MedicineDetail({ route, navigation }:any) {
                             />
                         </View>
                         <View style={styles.usesCalendar}>
-                            {loaded && <UseCalendar data={medicineData}/>}
+                            {loaded && <UseCalendar data={medicineData} navigation={navigation}/>}
                         </View>
-                        
                     </View>
                     <View style={styles.takenInformationContainer}>
                         <Text style={styles.takenInformationText}>
@@ -212,7 +233,7 @@ function InfoText(props: { title:string, content:string, aditional:string }) {
 }
 
 const styles = StyleSheet.create({
-    medicineDetail: {
+    container: {
         display: "flex",
         width: "100%",
         height: "100%",
@@ -261,7 +282,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "5%",
         borderRadius: 5,
-        // backgroundColor: "yellow"
+        backgroundColor: "yellow"
     },
     mainInfoImageWrapper: {
         display: "flex",
@@ -294,6 +315,7 @@ const styles = StyleSheet.create({
         height: "42%",
         alignItems: "center",
         backgroundColor: "#F2F2F2"
+        // backgroundColor: "red"
     },
     usesCounter: {
         display: "flex",
@@ -305,13 +327,15 @@ const styles = StyleSheet.create({
     usesCalendar: {
         width: "100%",
         height: "35%",
+        // backgroundColor: "yellow"
     },
     takenInformationContainer: {
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
         width: "100%",
         height: "10%",
+        // backgroundColor: "blue"
     },
     takenInformationText: {
         fontSize: 45,
@@ -322,7 +346,8 @@ const styles = StyleSheet.create({
         height: "16%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "green"
+        // backgroundColor: "green"
+        backgroundColor: "#F2F2F2"
     },
     button: {
         width: "55%",

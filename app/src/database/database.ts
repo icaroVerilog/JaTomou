@@ -9,8 +9,14 @@ export default class Database {
             usageDays: 0,
             currentDay: new Date().getDay(),
             status: 0,
-            usedDays: [],
-            useControl: []
+            useControl: [
+                {
+                    dayOfWeek: 0,
+                    date: "00/00/0000",
+                    useTime: "00:00",
+                    status: 0
+                }
+            ]
         }
 
         const response = await AsyncStorage.getItem("@medicalApp2:medicine")
@@ -48,10 +54,27 @@ export default class Database {
         const response = await AsyncStorage.getItem("@medicalApp2:medicine")
         const data:Array<Medicine> = response ? JSON.parse(response): []
         
-        const updatedData = data.map(function(medicine){
-            const prevUsedDay = medicine.usedDays[medicine.usedDays.length - 1]
-            if (new Date().toLocaleDateString() != prevUsedDay){
+        /* updating the used status quando o dia muda */
+        var updatedData = data.map(function(medicine){
+            const prevUsedDayIndex = medicine.useControl.length - 1
+            if (new Date().toLocaleDateString() != medicine.useControl[prevUsedDayIndex].date){
+
+                const currentDate = new Date()
+
                 medicine.status = 0
+                medicine.useControl.push({
+                    dayOfWeek: currentDate.getDay(),
+                    date: currentDate.toLocaleDateString(),
+                    useTime: `${currentDate.getHours()}:${currentDate.getMinutes()}`,
+                    status: 0
+                })
+
+
+                /* Verifica se atrasou o  dia anterior */
+                if (medicine.useControl[prevUsedDayIndex].status == 0){
+                    medicine.useControl[prevUsedDayIndex].status = 2
+                }
+
                 return medicine
             }
             else {

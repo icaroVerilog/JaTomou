@@ -5,6 +5,7 @@ export declare global {
         date: string,
         useTime: string,
         status: number,
+        color?: string
     }
 
     export type Medicine = {
