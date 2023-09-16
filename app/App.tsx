@@ -34,9 +34,9 @@ export default function App() {
         return (
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={ alreadyUsed == true? "Main": "Welcome"}>
-                    <Stack.Screen name="Welcome"        component={Welcome} options={{animation:"slide_from_left"}}/>
-                    <Stack.Screen name="Main"           component={Main}    options={{animation:"slide_from_bottom"}}/>
-                    <Stack.Screen name="NewMedicine"    component={NewMedicine} options={{animation:"slide_from_bottom"}}/>
+                    <Stack.Screen name="Welcome"        component={Welcome}        options={{animation:"slide_from_left"}}/>
+                    <Stack.Screen name="Main"           component={Main}           options={{animation:"slide_from_bottom"}}/>
+                    <Stack.Screen name="NewMedicine"    component={NewMedicine}    options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="MedicineDetail" component={MedicineDetail} options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="UsageDayDetail" component={UsageDayDetail} options={{animation:"slide_from_bottom"}}/>
                 </Stack.Navigator>
