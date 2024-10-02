@@ -30,7 +30,7 @@ export default function NewMedicine({navigation}: any) {
     const [focusedUseIntervalTypeField, setFocusedUseIntervalTypeField] = useState(false)
     const [filledUseIntervalTypeField, setFilledUseIntervalTypeField]   = useState(false)
     const [focusedUseIntervalField, setFocusedUseIntervalField]         = useState(false)
-    const [filledUseIntervalField, setFilledUseIntervalField]           = useState(false)
+    const [filledUseIntervalField,  setFilledUseIntervalField]           = useState(false)
     const [errorNameField, setErrorNameField]     = useState<boolean>(false)
     const [animationState, setAnimationState]     = useState<boolean>(false)
 
@@ -50,6 +50,13 @@ export default function NewMedicine({navigation}: any) {
     function handleMedicineNameChange(value: string){
         console.log(value)
         setMedicine((medicine) => ({...medicine, name: value}))
+
+        if (value === ""){
+            setFilledNameField(false)
+        } else {
+            setFilledNameField(true)
+        }
+
         console.log(medicine)
     }
 
@@ -62,25 +69,22 @@ export default function NewMedicine({navigation}: any) {
         if (value === "Temporário") {
             setFilledUseIntervalTypeField(true)
             setMedicine((medicine) => ({...medicine, useIntervalType: 2}))  
-        }
+        } 
     }
 
     function handleUseIntervalChange(value: number){
-        console.log(medicine)
         setMedicine((medicine) => ({...medicine, useInterval: value}))   
         setFilledUseIntervalField(true)
     }
 
     function handleUseTimeChange(value: string){
-        console.log(medicine)
         setMedicine((medicine) => ({...medicine, useTime: value}))   
     }
-
 
     function handleCreateMedicine(){
         Keyboard.dismiss()
 
-        if (filledNameField == false){
+        if (filledNameField === false){
             setErrorNameField(true)
             setMedicineNamePlaceholder("É obrigatório inserir um nome")
         }
@@ -103,7 +107,6 @@ export default function NewMedicine({navigation}: any) {
         if (medicine.name == ""){
             setMedicineNamePlaceholder("Digite o nome do medicamento")
         }
-        setFilledNameField(!!medicine.name)
     }
 
     function handleUseIntervalTypeFieldFocus(){
@@ -112,7 +115,6 @@ export default function NewMedicine({navigation}: any) {
 
     function handleUseIntervalTypeFieldBlur(){
         setFocusedUseIntervalTypeField(false)
-        setFilledUseIntervalTypeField(!!medicine.useIntervalType)
     }
 
     function handleUseIntervalFieldFocus(){
@@ -144,7 +146,7 @@ export default function NewMedicine({navigation}: any) {
                         </View>
                         <View style={styles.instructions}>
                             <Text style={styles.instructionsText}>
-                                Digite o nome do medicamento parque criar um lembrete
+                                Digite as informações para criar um lembrete
                             </Text>
                         </View>
                         <View style={styles.dataFields}>
@@ -160,11 +162,10 @@ export default function NewMedicine({navigation}: any) {
                                     placeholder={medicineNamePlaceholder} 
                                     onBlur={handleNameFieldBlur}
                                     onFocus={handleNameFieldFocus}
-                                    
                                     onChangeText={(value) => {handleMedicineNameChange(value)}}
                                 />
                             </View>
-                             <View style={styles.fieldWrapper}>
+                            <View style={styles.fieldWrapper}>
                                 <SelectDropdown
                                     onBlur={handleUseIntervalTypeFieldBlur}
                                     onFocus={handleUseIntervalTypeFieldFocus}
@@ -180,6 +181,7 @@ export default function NewMedicine({navigation}: any) {
                                     onSelect={(selectedItem) => {handleUseIntervalTypeChange(selectedItem)}}
                                     buttonTextAfterSelection={(selectedItem) => {return selectedItem}}
                                     rowTextForSelection={(item, index) => {return item}}
+                                    dropdownStyle={dropdownStyle.dropdown2MenuStyle}
                                 />
                             </View>
                             <View style={[styles.fieldWrapper, medicine.useIntervalType == 1 ? {display: "flex"}: {display: "none"}]}>
@@ -266,7 +268,6 @@ const styles = StyleSheet.create({
         height: "15%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "red"
     },
     instructionsText: {
         fontSize: 22,
@@ -292,7 +293,6 @@ const styles = StyleSheet.create({
         height: "20%",
         justifyContent: "flex-start",
         alignItems: "center",
-        backgroundColor: "yellow"
     }
 })
 
@@ -320,13 +320,17 @@ const dropdownStyle = StyleSheet.create({
     text: {
         color: "#707070",
         fontSize: 19,
-    }
+    },
+    dropdown2MenuStyle: {
+        backgroundColor: '#FFF',
+        borderRadius: 5,
+      },
 })
 
 const confirmButtomStyle = StyleSheet.create({
     button: {
         width: "70%",
-        height: "35%",
+        height: "33%",
         borderRadius: 30,
         justifyContent: "center",
         alignItems: "center",

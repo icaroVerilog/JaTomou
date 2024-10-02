@@ -14,8 +14,7 @@ type Data = {
     color: string
 }
 
-/* Refatorar para incluir o tipo certo certa */
-export default function UseScheduler(props: { data: Medicine, navigation: any}){
+ export default function UseScheduler(props: { data: Medicine, navigation: any}){
 
     const [weekDaysData, setWeekDaysData] = useState<Data[]>([
         {
@@ -73,29 +72,70 @@ export default function UseScheduler(props: { data: Medicine, navigation: any}){
 
     useEffect(() =>{
 
-        let weekDaysDataAux = weekDaysData
+        const firstUseDate = props.data.useControl[0]
         const medicineUseData = props.data
-        
+        let weekDaysDataAux = weekDaysData
+
+        const currentDate = new Date()
+        if (currentDate.toLocaleDateString() === firstUseDate.date){
+            weekDaysDataAux = weekDaysDataAux.map(day => {
+                console.log(day.dayOfWeek,currentDate.getDay(), "<<<<<<<<<<<<<<<<<c" )
+                if (day.dayOfWeek < currentDate.getDay()){
+                    return {...day, status: 999}
+                } 
+                else if (day.dayOfWeek - 1 === currentDate.getDay()){
+                    return {...day, status: 0}
+                }
+                else if (day.dayOfWeek > currentDate.getDay()){
+                    return {...day, status: 999}
+                } 
+                else {
+                    return {...day}
+                }
+            })
+        }
+
+        weekDaysDataAux = weekDaysDataAux.map(day => {
+            console.log(day.dayOfWeek,currentDate.getDay(), "<<<<<<<<<<<<<<<<<c" )
+            // if (day.dayOfWeek < currentDate.getDay()){
+            //     return {...day, status: 999}
+            // } 
+            if (day.dayOfWeek - 1 === currentDate.getDay()){
+                return {...day, status: 0}
+            }
+            else if (day.dayOfWeek > currentDate.getDay()){
+                return {...day, status: 999}
+            } 
+            else {
+                return {...day}
+            }
+        })
+
+
         let i = medicineUseData.useControl.length - 1;
         while (i >= 0 && medicineUseData.useControl[i].dayOfWeek <= medicineUseData.useControl[medicineUseData.useControl.length - 1].dayOfWeek) {
             
-            weekDaysDataAux[medicineUseData.useControl[i].dayOfWeek].date = medicineUseData.useControl[i].date
+            weekDaysDataAux[medicineUseData.useControl[i].dayOfWeek].date    = medicineUseData.useControl[i].date
             weekDaysDataAux[medicineUseData.useControl[i].dayOfWeek].useTime = medicineUseData.useControl[i].useTime
-            weekDaysDataAux[medicineUseData.useControl[i].dayOfWeek].status = medicineUseData.useControl[i].status
+            weekDaysDataAux[medicineUseData.useControl[i].dayOfWeek].status  = medicineUseData.useControl[i].status
 
-            if (medicineUseData.useControl[i].status == 1){
+            if (medicineUseData.useControl[i].status === 1){
                 weekDaysDataAux[medicineUseData.useControl[i].dayOfWeek].color = "green"
             }
-            if (medicineUseData.useControl[i].status == 2){
+            if (medicineUseData.useControl[i].status === 2){
                 weekDaysDataAux[medicineUseData.useControl[i].dayOfWeek].color = "red"
             }
             i--;
         }
 
-
+        // console.log(medicineUseData)
         setWeekDaysData(weekDaysDataAux)
         setTriggerRender(!triggerRender)
     },[props.data])
+
+    function preventPrevDateClick(){
+        
+    }
 
     return (
         <View style={calendar.container}>
@@ -104,25 +144,53 @@ export default function UseScheduler(props: { data: Medicine, navigation: any}){
                     <Text style={calendar.title}>Calendário</Text>
                 </View>
                 <View style={calendar.days}>
-                    <Pressable style={[weekDay.container, {backgroundColor: weekDaysData[0].color}]} onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[0])}>
+                    <Pressable 
+                        style={[weekDay.container, {backgroundColor: weekDaysData[0].color}]} 
+                        onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[0])}
+                        disabled={weekDaysData[0].status === 999}
+                    >
                         <Text>DOM</Text>
                     </Pressable>
-                    <Pressable style={[weekDay.container, {backgroundColor: weekDaysData[1].color}]} onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[1])}>
+                    <Pressable 
+                        style={[weekDay.container, {backgroundColor: weekDaysData[1].color}]} 
+                        onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[1])}
+                        disabled={weekDaysData[1].status === 999}
+                    >
                         <Text>SEG</Text>
                     </Pressable>
-                    <Pressable style={[weekDay.container, {backgroundColor: weekDaysData[2].color}]} onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[2])}>
+                    <Pressable 
+                        style={[weekDay.container, {backgroundColor: weekDaysData[2].color}]} 
+                        onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[2])}
+                        disabled={weekDaysData[2].status === 999}
+                    >
                         <Text>TER</Text>
                     </Pressable>
-                    <Pressable style={[weekDay.container, {backgroundColor: weekDaysData[3].color}]} onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[3])}>
+                    <Pressable 
+                        style={[weekDay.container, {backgroundColor: weekDaysData[3].color}]} 
+                        onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[3])}
+                        disabled={weekDaysData[3].status === 999}
+                    >
                         <Text>QUA</Text>
                     </Pressable>
-                    <Pressable style={[weekDay.container, {backgroundColor: weekDaysData[4].color}]} onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[4])}>
+                    <Pressable 
+                        style={[weekDay.container, {backgroundColor: weekDaysData[4].color}]} 
+                        onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[4])}
+                        disabled={weekDaysData[4].status === 999}
+                    >
                         <Text>QUI</Text>
                     </Pressable>
-                    <Pressable style={[weekDay.container, {backgroundColor: weekDaysData[5].color}]} onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[5])}>
+                    <Pressable 
+                        style={[weekDay.container, {backgroundColor: weekDaysData[5].color}]} 
+                        onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[5])}
+                        disabled={weekDaysData[5].status === 999}
+                    >
                         <Text>SEX</Text>
                     </Pressable>
-                    <Pressable style={[weekDay.container, {backgroundColor: weekDaysData[6].color}]} onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[6])}>
+                    <Pressable 
+                        style={[weekDay.container, {backgroundColor: weekDaysData[6].color}]} 
+                        onPress={() => props.navigation.navigate("UsageDayDetail", weekDaysData[6])}
+                        disabled={weekDaysData[6].status === 999}
+                    >
                         <Text>SAB</Text>
                     </Pressable>
                 </View>

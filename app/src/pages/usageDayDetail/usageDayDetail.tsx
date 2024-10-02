@@ -59,28 +59,61 @@ export default function UsageDayDetail({ route, navigation }: any) {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.infoContainer}> 
-                        <View style={styles.infoContent}>
-                            <View style={styles.usageInformation}>
-                                <View style={styles.infoTextContainer}>
-                                    <InfoText 
-                                        title="Data" 
-                                        content={dayData.date}
-                                    />
+                        {   
+                            dayData.status === 0 &&
+                            (
+                                <View style={styles.infoContent}>
+                                    <View style={styles.usageInformation}>
+                                        <Text style={styles.nextUseInformation}>
+                                            Próximo uso
+                                        </Text>
+                                        <View style={styles.infoTextContainer}>
+                                            <InfoText 
+                                                title="Data" 
+                                                content={dayData.date}
+                                            />
+                                        </View>
+                                        <View style={styles.infoTextContainer}>
+                                            {<InfoText 
+                                                title="Horário" 
+                                                content={dayData.useTime}
+                                            />}
+                                        </View>
+                                    </View>
+                                    <View style={styles.usageStatusContainer}>
+                                        <Text style={styles.usageStatus}>
+                                            {statusParser(dayData.status)}
+                                        </Text>
+                                    </View>
                                 </View>
-                                <View style={styles.infoTextContainer}>
-                                    {<InfoText 
-                                        title="Horário" 
-                                        content={dayData.useTime}
-                                    />}
+                            )
+                        }
+                        {   
+                            dayData.status === 1 &&
+                            (
+                                <View style={styles.infoContent}>
+                                    <View style={styles.usageInformation}>
+                                        <View style={styles.infoTextContainer}>
+                                            <InfoText 
+                                                title="Data" 
+                                                content={dayData.date}
+                                            />
+                                        </View>
+                                        <View style={styles.infoTextContainer}>
+                                            {<InfoText 
+                                                title="Horário" 
+                                                content={dayData.useTime}
+                                            />}
+                                        </View>
+                                    </View>
+                                    <View style={styles.usageStatusContainer}>
+                                        <Text style={styles.usageStatus}>
+                                            {statusParser(dayData.status)}
+                                        </Text>
+                                    </View>
                                 </View>
-                            </View>
-                            <View style={styles.usageStatusContainer}>
-                                <Text style={styles.usageStatus}>
-                                    {statusParser(dayData.status)}
-                                </Text>
-                            </View>
-                        </View>
-                        
+                            )
+                        }
                     </View>
                 </View>
             </View>
@@ -100,9 +133,6 @@ function InfoText(props: { title:string, content:string }) {
                 <Text style={infoTextStyle.textContentData}>
                     {props.content}
                 </Text>
-                {/* <Text style={infoTextStyle.textContentAditional}>
-                    {props.aditional}
-                </Text> */}
             </View>
         </View>
     )
@@ -116,7 +146,6 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "flex-start",
         alignItems: "center",
-        // backgroundColor: "yellow"
     },
     content: {
         display: "flex", 
@@ -161,21 +190,32 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         width: "80%",
         height: "40%",
+        alignItems: "center",
         borderRadius: 25,
         elevation: 3,
         backgroundColor: "#FFFFFF"
     },
-
-
-
     usageInformation: {
         display: "flex",
         flexDirection: "column",
         width: "100%",
         height: "70%",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "blue"
+    },
+    nextUseInformation: {
+        fontSize: 18,
+        color: "#adb5bd",
+        textAlign: "center",
+        marginTop: "3%",
+        marginBottom: "2%"
+    },
+    infoTextContainer: {
+        display: "flex",
+        width: "90%",
+        height: "40%",
+        justifyContent: "center",
+        alignItems: "center",
     },
     usageStatusContainer: {
         display: "flex",
@@ -183,14 +223,6 @@ const styles = StyleSheet.create({
         height: "30%",
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: "yellow"
-    },
-    infoTextContainer: {
-        display: "flex",
-        width: "90%",
-        height: "40%",
-        justifyContent: "center",
-        alignItems: "center"
     },
     usageStatus: {
         fontSize: 45,

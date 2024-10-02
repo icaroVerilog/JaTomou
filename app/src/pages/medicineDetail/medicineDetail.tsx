@@ -9,8 +9,8 @@ import { TouchableOpacity } from "react-native"
 import { StatusBar }        from "react-native"
 import { Animated }         from "react-native"
 
-import UseCalendar          from "./components/useScheduler"
 
+import UseScheduler         from "./components/useScheduler"
 import RighArrow            from "../../../assets/icons/general/right-arrow.png"
 import Trash                from "../../../assets/icons/general/trash.png"
 import Medicine             from "../../../assets/icons/medicine/med3.png"
@@ -65,7 +65,7 @@ export default function MedicineDetail({ route, navigation }:any) {
         const lastUsedData = medicineData.useControl[medicineData.useControl.length - 1]
         const currentDate = new Date()
 
-        if (medicineData.useControl.length == 1){
+        if (medicineData.useControl.length === 1){
             const useControl:UseControlData = {
                 dayOfWeek: currentDate.getDay(),
                 date:      currentDate.toLocaleDateString(),
@@ -87,12 +87,11 @@ export default function MedicineDetail({ route, navigation }:any) {
         }
         else {
             const useControl:UseControlData = {
-            dayOfWeek: lastUsedData.dayOfWeek,
-            date: lastUsedData.date,
-            useTime: lastUsedData.useTime,
-            status: 1
+                dayOfWeek: lastUsedData.dayOfWeek,
+                date: lastUsedData.date,
+                useTime: lastUsedData.useTime,
+                status: 1
             }
-
 
             const updatedMedicine:Medicine = {
                 id: medicineData.id,        
@@ -173,18 +172,22 @@ export default function MedicineDetail({ route, navigation }:any) {
                             <InfoText 
                                 title="Dias de uso" 
                                 content={`${medicineData.usageDays}`}
-                                aditional={ (medicineData.usageDays == 0 || medicineData.usageDays > 1)? "dias": "dia"}
+                                aditional={ (medicineData.usageDays === 0 || medicineData.usageDays > 1)? "dias": "dia"}
                             />
                         </View>
                         <View style={styles.usesCounter}>
                             <InfoText 
                                 title="Horario do proximo uso" 
                                 content={`${medicineData.usageDays}`}
-                                aditional={ (medicineData.usageDays == 0 || medicineData.usageDays > 1)? "dias": "dia"}
+                                aditional={ (medicineData.usageDays === 0 || medicineData.usageDays > 1)? "dias": "dia"}
                             />
                         </View>
                         <View style={styles.usesCalendar}>
-                            {loaded && <UseCalendar data={medicineData} navigation={navigation}/>}
+                            {
+                                loaded && (
+                                    <UseScheduler data={medicineData} navigation={navigation}/>
+                                )
+                            }
                         </View>
                     </View>
                     <View style={styles.takenInformationContainer}>
@@ -261,6 +264,7 @@ const styles = StyleSheet.create({
         height: "60%",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "blue"
     },
     returnButtonImage: {
         width: "55%",
