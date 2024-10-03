@@ -108,7 +108,7 @@ export default function MedicineDetail({ route, navigation }:any) {
                 status: 1,
                 useControl: [...useControlEntries, updatedEntry]
             }
-            console.log("asdasdas", updatedMedicine)
+
             setMedicineData(updatedMedicine)
             database.updateMedicine(updatedMedicine)
         }

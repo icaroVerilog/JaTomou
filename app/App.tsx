@@ -8,6 +8,7 @@ import Main           from "./src/pages/main/main"
 import NewMedicine    from "./src/pages/newMedicine/newMedicine"
 import MedicineDetail from "./src/pages/medicineDetail/medicineDetail"
 import UsageDayDetail from "./src/pages/usageDayDetail/usageDayDetail"
+import UsageCalendar  from "./src/pages/usageCalendar/usageCalendar"
 
 import Database from "./src/database/database"
 
@@ -33,12 +34,13 @@ export default function App() {
     if (updatedDataComplete == true){
         return (
             <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={ alreadyUsed == true? "Main": "Welcome"}>
+                <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={ alreadyUsed == true? "UsageCalendar": "Welcome"}>
                     <Stack.Screen name="Welcome"        component={Welcome}        options={{animation:"slide_from_left"}}/>
                     <Stack.Screen name="Main"           component={Main}           options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="NewMedicine"    component={NewMedicine}    options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="MedicineDetail" component={MedicineDetail} options={{animation:"slide_from_bottom"}}/>
                     <Stack.Screen name="UsageDayDetail" component={UsageDayDetail} options={{animation:"slide_from_bottom"}}/>
+                    <Stack.Screen name="UsageCalendar"  component={UsageCalendar}  options={{animation:"slide_from_bottom"}}/>
                 </Stack.Navigator>
             </NavigationContainer>
         )
