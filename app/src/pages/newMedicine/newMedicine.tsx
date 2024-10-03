@@ -48,7 +48,6 @@ export default function NewMedicine({navigation}: any) {
         /* BUG: QUANDO SE INSERE O PRIMEIRO CARACTERE, A FUNÇÃO ABAIXO NAO ATUALIZA MEDICINE */
 
     function handleMedicineNameChange(value: string){
-        console.log(value)
         setMedicine((medicine) => ({...medicine, name: value}))
 
         if (value === ""){
@@ -57,11 +56,9 @@ export default function NewMedicine({navigation}: any) {
             setFilledNameField(true)
         }
 
-        console.log(medicine)
     }
 
     function handleUseIntervalTypeChange(value: string){
-        console.log(medicine)
         if (value === "Diário") {
             setFilledUseIntervalTypeField(true)
             setMedicine((medicine) => ({...medicine, useIntervalType: 1, useInterval: 24}))

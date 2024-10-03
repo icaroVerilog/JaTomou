@@ -86,7 +86,14 @@ export default function MedicineDetail({ route, navigation }:any) {
             database.updateMedicine(updatedMedicine)
         }
         else {
-            const useControl:UseControlData = {
+
+            const useControlEntries = medicineData.useControl.filter((entry:UseControlData) => {
+                if (entry.date !== lastUsedData.date){
+                    return entry
+                }
+            })
+
+            const updatedEntry:UseControlData = {
                 dayOfWeek: lastUsedData.dayOfWeek,
                 date: lastUsedData.date,
                 useTime: lastUsedData.useTime,
@@ -99,8 +106,9 @@ export default function MedicineDetail({ route, navigation }:any) {
                 usageDays: medicineData.usageDays + 1,
                 currentDay: new Date().getDay(),
                 status: 1,
-                useControl: [...medicineData.useControl, useControl]
+                useControl: [...useControlEntries, updatedEntry]
             }
+            console.log("asdasdas", updatedMedicine)
             setMedicineData(updatedMedicine)
             database.updateMedicine(updatedMedicine)
         }

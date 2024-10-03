@@ -79,7 +79,6 @@ type Data = {
         const currentDate = new Date()
         if (currentDate.toLocaleDateString() === firstUseDate.date){
             weekDaysDataAux = weekDaysDataAux.map(day => {
-                console.log(day.dayOfWeek,currentDate.getDay(), "<<<<<<<<<<<<<<<<<c" )
                 if (day.dayOfWeek < currentDate.getDay()){
                     return {...day, status: 999}
                 } 
@@ -96,10 +95,6 @@ type Data = {
         }
 
         weekDaysDataAux = weekDaysDataAux.map(day => {
-            console.log(day.dayOfWeek,currentDate.getDay(), "<<<<<<<<<<<<<<<<<c" )
-            // if (day.dayOfWeek < currentDate.getDay()){
-            //     return {...day, status: 999}
-            // } 
             if (day.dayOfWeek - 1 === currentDate.getDay()){
                 return {...day, status: 0}
             }
@@ -128,7 +123,6 @@ type Data = {
             i--;
         }
 
-        // console.log(medicineUseData)
         setWeekDaysData(weekDaysDataAux)
         setTriggerRender(!triggerRender)
     },[props.data])

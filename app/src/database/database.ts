@@ -29,7 +29,6 @@ export default class Database {
     async retrieveMedicines(){
         const response = await AsyncStorage.getItem("@medicalApp2:medicine")
         const data = response ? JSON.parse(response): []
-        console.log(data[0])
         return data
     }
 
